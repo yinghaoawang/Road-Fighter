@@ -8,6 +8,9 @@ class Player {
 
         this.grounded = false;
         this.attack = {
+            isAttacking: false,
+            lastAttackTime: -999999,
+
             offset: {
                 x: 35,
                 y: -40
@@ -15,11 +18,38 @@ class Player {
             size: {
                 x: 50,
                 y: 25
-            }
+            },
+            duration: .15,
+            cooldown: .35,
         }
     }
 
+    performAttack() {
+        console.log('attacking');
+        this.attack.isAttacking = true;
+        this.attack.lastAttackTime = Date.now();
+    }
+
+    getCanAttack() {
+        return !this.getIsAttacking() && Date.now() >= this.getNextAttackTime();
+    }
+
+    getNextAttackTime() {
+        return this.attack.lastAttackTime + this.attack.duration * 1000 + this.attack.cooldown * 1000;
+    }
+
+    getIsAttacking() {
+        if (this.attack.isAttacking) return true;
+        return false;
+    }
+
     update() {
+        if (this.getIsAttacking()) {
+            if (Date.now() >= this.attack.lastAttackTime + this.attack.duration * 1000) {
+                this.attack.isAttacking = false;
+            }
+        }
+
         this.velocity.y += gravity;
 
         this.position.x += this.velocity.x;
@@ -45,7 +75,9 @@ class Player {
         ctx.fillRect(this.position.x, this.position.y, this.size.x, this.size.y);
 
         ctx.fillStyle = 'green';
-        ctx.fillRect(this.getCenter().x + this.attack.offset.x, this.getCenter().y + this.attack.offset.y,
-            this.attack.size.x, this.attack.size.y);
+        if (this.attack.isAttacking) {
+            ctx.fillRect(this.getCenter().x + this.attack.offset.x, this.getCenter().y + this.attack.offset.y,
+                this.attack.size.x, this.attack.size.y);
+        }
     }
 }

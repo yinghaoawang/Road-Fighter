@@ -38,6 +38,12 @@ function handleInputs() {
                     player.grounded = false;
                 }
                 break;
+            case 'q':
+                if (player.getCanAttack()) {
+                    player.performAttack();
+                }
+                
+                break;
             default:
                 console.log('default');
                 break;
