@@ -1,29 +1,39 @@
 class Sprite {
-    constructor({imageUrl='./images/Zebra.png', spriteSize, facingRight=true, spriteOffset={x: 0, y: 0}, targetSize=spriteSize, position={x: 0, y: 0}, frameData={maxFrames: 1, frameDuration: 500}, sprites}) {
-        this.image = new Image();
-        this.image.src = imageUrl;
-        this.position = position;
-        if (spriteSize == null) {
-            this.image.onload = () => {
-                this.spriteSize = {
-                    x: this.image.width,
-                    y: this.image.height
-                }
+    constructor({facingRight=true, targetSize, position={x: 0, y: 0}, sprites}) {
+        this.sprites = sprites;
+        if (this.sprites == null || this.sprites.length == 0) {
+            this.sprites = {};
+            this.sprites.idle = {
+                imageUrl: './images/Zebra.png',
             };
         }
-        this.facingRight = facingRight;
-        this.spriteSize = spriteSize;
-        this.spriteOffset = spriteOffset;
-        this.targetSize = targetSize;
-        this.currentFrame = 0;
-        this.frameData = frameData;
-        this.lastFrameDrawn = Date.now();
-        this.sprites = sprites;
-        for (const spriteKey in sprites) {  
-            let sprite = sprites[spriteKey];
+        if (typeof this.sprites === 'string') {
+            this.sprites = {idle: {imageUrl: this.sprites}};
+        }
+
+        for (const spriteKey in this.sprites) {  
+            let sprite = this.sprites[spriteKey];
             sprite.image = new Image();
             sprite.image.src = sprite.imageUrl;
+            if (sprite.maxFrames == null) sprite.maxFrames = 1;
+            if (sprite.size == null) {
+                sprite.image.onload = () => {
+                    sprite.size = {
+                        x: sprite.image.width,
+                        y: sprite.image.height
+                    }
+                };
+            }
+            if (sprite.frameDuration == null) sprite.frameDuration = 100;
         }
+
+        this.position = position;
+        this.facingRight = facingRight;
+        this.targetSize = targetSize;
+
+        this.currentFrame = 0;
+        this.lastFrameDrawn = Date.now();
+        this.currentSprite = this.sprites.idle;
     }
 
     switchSprite(spriteKey) {
@@ -32,35 +42,37 @@ class Sprite {
             return;
         }
 
-        if (this.sprites[spriteKey].image == this.image) {
+        if (this.sprites[spriteKey]== this.currentSprite) {
             return;
         }
 
-        this.image = this.sprites[spriteKey].image;
-        this.frameData.maxFrames = this.sprites[spriteKey].maxFrames;
+        this.currentSprite = this.sprites[spriteKey];
         this.currentFrame = 0;
     }
 
     drawSprite({flipped={x: false}}) {
+        if (this.currentSprite.size == null) return;
+        
+        console.log('drawing sprite');
         ctx.save();
         ctx.translate(this.position.x + (flipped.x ? this.targetSize.x : 0), this.position.y);
         ctx.scale(flipped.x ? -1 : 1, 1);
-        ctx.drawImage(this.image,
-            this.currentFrame * this.spriteSize.x, 0, this.spriteSize.x, this.spriteSize.y,
+        ctx.drawImage(this.currentSprite.image,
+            this.currentFrame * this.currentSprite.size.x, 0, this.currentSprite.size.x, this.currentSprite.size.y,
             (flipped.x ? 1 : -1) * this.targetSize.x / 2, -this.targetSize.y / 2, this.targetSize.x, this.targetSize.y);
         ctx.restore();
     }
 
     animateFrames() {
-        if (Date.now() - this.lastFrameDrawn >= this.frameData.frameDuration) {
+        if (Date.now() - this.lastFrameDrawn >= this.currentSprite.frameDuration) {
             this.currentFrame++;
-            if (this.currentFrame >= this.frameData.maxFrames - 1) this.currentFrame = 0;
+            if (this.currentFrame >= this.currentSprite.maxFrames) this.currentFrame = 0;
             this.lastFrameDrawn = Date.now();
         }
     }
 
     draw() {
-        if (this.spriteSize == null) return;
+        if (this.currentSprite == null) return;
 
         this.animateFrames();
         this.drawSprite({flipped: {x: !this.facingRight}});
