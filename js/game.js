@@ -5,8 +5,23 @@ canvas.height = 576;
 
 const gravity = 2.2;
 
-let player = new Player({});
+let playerSpriteSize = {x: 200, y: 200};
+let player = new Player({imageUrl: './images/hero/Idle.png', spriteSize: playerSpriteSize, size: { x: 30, y: 110 },
+    targetSize: {x: playerSpriteSize.x * 2, y: playerSpriteSize.y * 2},
+    frameData: {maxFrames: 4, frameDuration: 50},
+    sprites: {
+        idle: {imageUrl: './images/hero/Idle.png', maxFrames: 4},
+        run: {imageUrl: './images/hero/Run.png', maxFrames: 8},
+        fall: {imageUrl: './images/hero/Fall.png', maxFrames: 2},
+        jump: {imageUrl: './images/hero/Jump.png', maxFrames: 2},
+        death: {imageUrl: './images/hero/Death.png', maxFrames: 7},
+        takeHit: {imageUrl: './images/hero/Take hit.png', maxFrames: 3},
+        attack1: {imageUrl: './images/hero/Attack1.png', maxFrames: 4},
+    },
+});
 let keysDown = [];
+
+let background = new Sprite({imageUrl: './images/Background.png', position: {x: canvas.width / 2, y: canvas.height / 2}, targetSize: {x: canvas.width, y: canvas.height}});
 
 addEventListener('keydown', function(e) {
     let keyPressed = e.key.toLowerCase();
@@ -27,9 +42,11 @@ function handleInputs() {
         switch(key) {
             case 'a':
                 player.velocity.x = -player.speed;
+                player.facingRight = false;
                 break;
             case 'd':
                 player.velocity.x = player.speed;
+                player.facingRight = true;
                 break;
             case ' ':
             case 'w':
@@ -57,6 +74,7 @@ function gameLoop() {
 
     ctx.fillStyle = '#eee';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+    background.draw();
     player.draw();
     requestAnimationFrame(gameLoop);
 }
