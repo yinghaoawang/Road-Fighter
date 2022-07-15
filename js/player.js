@@ -1,6 +1,6 @@
 class Player extends Sprite {
-    constructor({position={x: 0, y: 0}, frameData, targetSize, spriteSize, size={x:80, y:150}, facingRight=true, imageUrl, speed=8, jumpSpeed=40, velocity={x:0, y:0}, sprites}) {
-        super({position, spriteSize, imageUrl, targetSize, frameData, facingRight, sprites});
+    constructor({position={x: 0, y: 0}, targetSize, size={x:80, y:150}, facingRight=true, speed=8, jumpSpeed=40, velocity={x:0, y:0}, sprites}) {
+        super({position, targetSize, facingRight, sprites});
         this.position = position;
         this.size = size;
         this.speed = speed;

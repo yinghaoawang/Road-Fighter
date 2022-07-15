@@ -5,23 +5,21 @@ canvas.height = 576;
 
 const gravity = 2.2;
 
-let playerSpriteSize = {x: 200, y: 200};
-let player = new Player({imageUrl: './images/hero/Idle.png', spriteSize: playerSpriteSize, size: { x: 30, y: 110 },
-    targetSize: {x: playerSpriteSize.x * 2, y: playerSpriteSize.y * 2},
-    frameData: {maxFrames: 4, frameDuration: 50},
+let player = new Player({size: { x: 30, y: 110 },
+    targetSize: {x: 200 * 2, y: 200 * 2},
     sprites: {
-        idle: {imageUrl: './images/hero/Idle.png', maxFrames: 4},
-        run: {imageUrl: './images/hero/Run.png', maxFrames: 8},
-        fall: {imageUrl: './images/hero/Fall.png', maxFrames: 2},
-        jump: {imageUrl: './images/hero/Jump.png', maxFrames: 2},
-        death: {imageUrl: './images/hero/Death.png', maxFrames: 7},
-        takeHit: {imageUrl: './images/hero/Take hit.png', maxFrames: 3},
-        attack1: {imageUrl: './images/hero/Attack1.png', maxFrames: 4},
+        idle: {imageUrl: './images/hero/Idle.png', maxFrames: 4, frameDuration: 100, size: {x: 200, y: 200}},
+        run: {imageUrl: './images/hero/Run.png', maxFrames: 8, frameDuration: 60, size: {x: 200, y: 200}},
+        fall: {imageUrl: './images/hero/Fall.png', maxFrames: 2, frameDuration: 100, size: {x: 200, y: 200}},
+        jump: {imageUrl: './images/hero/Jump.png', maxFrames: 2, frameDuration: 100, size: {x: 200, y: 200}},
+        death: {imageUrl: './images/hero/Death.png', maxFrames: 7, frameDuration: 100, size: {x: 200, y: 200}},
+        takeHit: {imageUrl: './images/hero/Take hit.png', maxFrames: 3, frameDuration: 100, size: {x: 200, y: 200}},
+        attack1: {imageUrl: './images/hero/Attack1.png', maxFrames: 4, frameDuration: 100, size: {x: 200, y: 200}},
     },
 });
 let keysDown = [];
 
-let background = new Sprite({imageUrl: './images/Background.png', position: {x: canvas.width / 2, y: canvas.height / 2}, targetSize: {x: canvas.width, y: canvas.height}});
+let background = new Sprite({sprites: './images/Background.png', position: {x: canvas.width / 2, y: canvas.height / 2}, targetSize: {x: canvas.width, y: canvas.height}});
 
 addEventListener('keydown', function(e) {
     let keyPressed = e.key.toLowerCase();
