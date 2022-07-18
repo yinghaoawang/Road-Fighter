@@ -20,9 +20,10 @@ class Player extends Sprite {
                 x: 50,
                 y: 25
             },
-            duration: .15,
-            cooldown: .35,
+            duration: this.sprites.attack1.frameDuration * this.sprites.attack1.maxFrames,
+            cooldown: 50,
         }
+        console.log(this.attack.duration);
     }
 
     performAttack() {
@@ -36,7 +37,7 @@ class Player extends Sprite {
     }
 
     getNextAttackTime() {
-        return this.attack.lastAttackTime + this.attack.duration * 1000 + this.attack.cooldown * 1000;
+        return this.attack.lastAttackTime + this.attack.duration + this.attack.cooldown;
     }
 
     getIsAttacking() {
@@ -46,7 +47,8 @@ class Player extends Sprite {
 
     update() {
         if (this.getIsAttacking()) {
-            if (Date.now() >= this.attack.lastAttackTime + this.attack.duration * 1000) {
+            if (this.grounded) this.velocity.x = 0;
+            if (Date.now() >= this.attack.lastAttackTime + this.attack.duration) {
                 this.attack.isAttacking = false;
             }
         }
@@ -62,7 +64,9 @@ class Player extends Sprite {
             this.position.y += this.velocity.y;
         }
 
-        if (!this.grounded) {
+        if (this.attack.isAttacking) {
+            this.switchSprite('attack1');
+        } else if (!this.grounded) {
             if (this.velocity.y > 0) {
                 this.switchSprite('fall');
             } else {
@@ -85,6 +89,7 @@ class Player extends Sprite {
         ctx.strokeRect(this.position.x - this.size.x / 2, this.position.y - this.size.y / 2, this.size.x, this.size.y);
 
         if (this.attack.isAttacking) {
+            /*
             ctx.save();
             ctx.strokeStyle = 'limegreen';
             ctx.translate(this.position.x, this.position.y);
@@ -96,6 +101,7 @@ class Player extends Sprite {
             ctx.fillRect(this.attack.offset.x, this.attack.offset.y,
                 this.attack.size.x, this.attack.size.y);
             ctx.restore();
+            */
         }
     }
 }

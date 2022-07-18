@@ -53,7 +53,6 @@ class Sprite {
     drawSprite({flipped={x: false}}) {
         if (this.currentSprite.size == null) return;
         
-        console.log('drawing sprite');
         ctx.save();
         ctx.translate(this.position.x + (flipped.x ? this.targetSize.x : 0), this.position.y);
         ctx.scale(flipped.x ? -1 : 1, 1);

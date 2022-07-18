@@ -35,33 +35,53 @@ addEventListener('keyup', function(e) {
 });
 
 function handleInputs() {
-    player.velocity.x = 0;
+    let leftPressed, rightPressed, jumpPressed, attackPressed = false; 
     for (let key of keysDown) {
         switch(key) {
             case 'a':
-                player.velocity.x = -player.speed;
-                player.facingRight = false;
+                leftPressed = true;
                 break;
             case 'd':
-                player.velocity.x = player.speed;
-                player.facingRight = true;
+                rightPressed = true;
                 break;
             case ' ':
             case 'w':
-                if (player.grounded) {
-                    player.velocity.y = -player.jumpSpeed;
-                    player.grounded = false;
-                }
+                jumpPressed = true;
                 break;
             case 'q':
-                if (player.getCanAttack()) {
-                    player.performAttack();
-                }
-                
-                break;
+                attackPressed = true;
             default:
                 console.log('default');
                 break;
+        }
+    }
+    
+    if (leftPressed) {
+        if (!player.attack.isAttacking) {
+            player.velocity.x = -player.speed;
+            player.facingRight = false;
+        }
+    } else if (rightPressed) {
+        if (!player.attack.isAttacking) {
+            player.velocity.x = player.speed;
+            player.facingRight = true;
+        }
+    } else {
+        if (player.grounded) {
+            player.velocity.x = 0;
+        }
+    }
+
+    if (jumpPressed) {
+        if (player.grounded && !player.attack.isAttacking) {
+            player.velocity.y = -player.jumpSpeed;
+            player.grounded = false;
+        }
+    }
+
+    if (attackPressed) {
+        if (player.getCanAttack()) {
+            player.performAttack();
         }
     }
 }
