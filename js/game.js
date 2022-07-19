@@ -16,6 +16,18 @@ let player = new Player({size: { x: 30, y: 110 },
         takeHit: {imageUrl: './images/hero/Take hit.png', maxFrames: 3, frameDuration: 100, size: {x: 200, y: 200}},
         attack1: {imageUrl: './images/hero/Attack1.png', maxFrames: 4, frameDuration: 100, size: {x: 200, y: 200}},
     },
+    attackData: [
+        {
+            hitboxes: [
+                {offset: {x: 0, y: -60}, size: {x: 0, y: 0},},
+                {offset: {x: 0, y: -60}, size: {x: 160, y: 120},},
+                {offset: {x: 0, y: -60}, size: {x: 160, y: 120},},
+                {offset: {x: 0, y: -60}, size: {x: 160, y: 120},},
+            ],
+            spriteName: 'attack1',
+            cooldown: 50
+        }
+    ]
 });
 let keysDown = [];
 
@@ -57,12 +69,12 @@ function handleInputs() {
     }
     
     if (leftPressed) {
-        if (!player.attack.isAttacking) {
+        if (!player.getIsAttacking()) {
             player.velocity.x = -player.speed;
             player.facingRight = false;
         }
     } else if (rightPressed) {
-        if (!player.attack.isAttacking) {
+        if (!player.getIsAttacking()) {
             player.velocity.x = player.speed;
             player.facingRight = true;
         }
@@ -73,7 +85,7 @@ function handleInputs() {
     }
 
     if (jumpPressed) {
-        if (player.grounded && !player.attack.isAttacking) {
+        if (player.grounded && !player.getIsAttacking()) {
             player.velocity.y = -player.jumpSpeed;
             player.grounded = false;
         }

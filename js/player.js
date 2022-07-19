@@ -1,5 +1,5 @@
 class Player extends Sprite {
-    constructor({position={x: 0, y: 0}, targetSize, size={x:80, y:150}, facingRight=true, speed=8, jumpSpeed=40, velocity={x:0, y:0}, sprites}) {
+    constructor({position={x: 0, y: 0}, targetSize, size={x:80, y:150}, facingRight=true, speed=8, jumpSpeed=40, velocity={x:0, y:0}, sprites, attackData}) {
         super({position, targetSize, facingRight, sprites});
         this.position = position;
         this.size = size;
@@ -8,48 +8,64 @@ class Player extends Sprite {
         this.velocity = velocity;
 
         this.grounded = false;
-        this.attack = {
-            isAttacking: false,
-            lastAttackTime: -999999,
 
-            offset: {
-                x: 35,
-                y: -40
-            },
-            size: {
-                x: 50,
-                y: 25
-            },
-            duration: this.sprites.attack1.frameDuration * this.sprites.attack1.maxFrames,
-            cooldown: 50,
+        this.currentAttack = 0;
+        this.attackData = attackData;
+        this.attacking = false;
+        this.lastAttackTime = -999999;
+        for (let i = 0; i < this.attackData.length; ++i) {
+            let spriteName = this.attackData[i].spriteName;
+            this.attackData[i].lastAttackTime = -999999; // use lastAttackTime in player
+            this.attackData[i].duration = this.sprites[spriteName].frameDuration * this.sprites[spriteName].maxFrames;
         }
-        console.log(this.attack.duration);
+        console.log(this.getCurrentAttack().hitboxes);
     }
 
-    performAttack() {
+    performAttack(i) {
+        if (i == null) i = this.currentAttack;
+
         console.log('attacking');
-        this.attack.isAttacking = true;
-        this.attack.lastAttackTime = Date.now();
+        this.attacking = true;
+        this.attackData[i].lastAttackTime = Date.now();
+        this.lastAttackTime = Date.now();
     }
 
-    getCanAttack() {
-        return !this.getIsAttacking() && Date.now() >= this.getNextAttackTime();
+    getCanAttack(i) {
+        if (i == null) i = this.currentAttack;
+        console.log(this.getNextAttackTime(i));
+
+        return !this.getIsAttacking() && Date.now() >= this.getNextAttackTime(i);
     }
 
-    getNextAttackTime() {
-        return this.attack.lastAttackTime + this.attack.duration + this.attack.cooldown;
+    getLastAttackTime() {
+        return this.lastAttackTime;
+    }
+
+    getNextAttackTime(i) {
+        if (i == null) i = this.currentAttack;
+
+        return this.getLastAttackTime() + this.attackData[i].duration + this.attackData[i].cooldown;
+    }
+
+    getAttackFinished(i) {
+        if (i == null) i = this.currentAttack;
+
+        return this.getLastAttackTime() + this.attackData[i].duration;
     }
 
     getIsAttacking() {
-        if (this.attack.isAttacking) return true;
-        return false;
+        return this.attacking;
+    }
+
+    getCurrentAttack() {
+        return this.attackData[this.currentAttack];
     }
 
     update() {
         if (this.getIsAttacking()) {
             if (this.grounded) this.velocity.x = 0;
-            if (Date.now() >= this.attack.lastAttackTime + this.attack.duration) {
-                this.attack.isAttacking = false;
+            if (Date.now() >= this.getAttackFinished()) {
+                this.attacking = false;
             }
         }
 
@@ -64,8 +80,8 @@ class Player extends Sprite {
             this.position.y += this.velocity.y;
         }
 
-        if (this.attack.isAttacking) {
-            this.switchSprite('attack1');
+        if (this.getIsAttacking()) {
+            this.switchSprite(this.getCurrentAttack().spriteName);
         } else if (!this.grounded) {
             if (this.velocity.y > 0) {
                 this.switchSprite('fall');
@@ -88,20 +104,19 @@ class Player extends Sprite {
         ctx.strokeStyle = 'red';
         ctx.strokeRect(this.position.x - this.size.x / 2, this.position.y - this.size.y / 2, this.size.x, this.size.y);
 
-        if (this.attack.isAttacking) {
-            /*
+        if (this.getIsAttacking()) {
             ctx.save();
             ctx.strokeStyle = 'limegreen';
             ctx.translate(this.position.x, this.position.y);
             ctx.scale(this.facingRight ? 1 : -1, 1);
 
-            ctx.strokeRect(this.attack.offset.x, this.attack.offset.y,
-                this.attack.size.x, this.attack.size.y);
-            ctx.fillStyle = 'lime';
-            ctx.fillRect(this.attack.offset.x, this.attack.offset.y,
-                this.attack.size.x, this.attack.size.y);
+            const spriteName = this.getCurrentAttack().spriteName;
+            const timePerFrame = this.getCurrentAttack().duration / this.sprites[spriteName].maxFrames;
+            // hitbox index determined by which frame attack animation is currently on
+            let i = (Math.floor((Date.now() - this.getLastAttackTime()) / timePerFrame) || 0) % this.sprites[spriteName].maxFrames;
+            ctx.strokeRect(this.getCurrentAttack().hitboxes[i].offset.x, this.getCurrentAttack().hitboxes[i].offset.y,
+                this.getCurrentAttack().hitboxes[i].size.x, this.getCurrentAttack().hitboxes[i].size.y);
             ctx.restore();
-            */
         }
     }
 }
