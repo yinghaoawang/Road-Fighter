@@ -6,6 +6,35 @@ canvas.height = 576;
 const gravity = 2.2;
 
 let player = new Player({
+    position: {x: 60, y: 0},
+    hitbox: {size: { x: 30, y: 110 }},
+    targetSize: {x: 200 * 2, y: 200 * 2},
+    sprites: {
+        idle: {imageUrl: './images/hero/Idle.png', maxFrames: 4, frameDuration: 100, size: {x: 200, y: 200}},
+        run: {imageUrl: './images/hero/Run.png', maxFrames: 8, frameDuration: 60, size: {x: 200, y: 200}},
+        fall: {imageUrl: './images/hero/Fall.png', maxFrames: 2, frameDuration: 100, size: {x: 200, y: 200}},
+        jump: {imageUrl: './images/hero/Jump.png', maxFrames: 2, frameDuration: 100, size: {x: 200, y: 200}},
+        death: {imageUrl: './images/hero/Death.png', maxFrames: 7, frameDuration: 100, size: {x: 200, y: 200}},
+        takeHit: {imageUrl: './images/hero/Take hit.png', maxFrames: 3, frameDuration: 100, size: {x: 200, y: 200}},
+        attack1: {imageUrl: './images/hero/Attack1.png', maxFrames: 4, frameDuration: 100, size: {x: 200, y: 200}},
+    },
+    attackData: [
+        {
+            hitboxes: [
+                {offset: {x: 0, y: -60}, size: {x: 0, y: 0},},
+                {offset: {x: 0, y: -60}, size: {x: 160, y: 120},},
+                {offset: {x: 0, y: -60}, size: {x: 160, y: 120},},
+                {offset: {x: 0, y: -60}, size: {x: 160, y: 120},},
+            ],
+            spriteName: 'attack1',
+            cooldown: 50
+        }
+    ]
+});
+
+let player2 = new Player({
+    position: {x: canvas.width - 60, y: 0},
+    facingRight: false,
     hitbox: {offset: {x: 0, y: -30}, size: { x: 40, y: 100 }},
     targetSize: {x: 250 * 2, y: 250 * 2},
     sprites: {
@@ -34,32 +63,8 @@ let player = new Player({
             cooldown: 50
         }
     ]
-    /*
-    hitbox: {size: { x: 30, y: 110 }},
-    targetSize: {x: 200 * 2, y: 200 * 2},
-    sprites: {
-        idle: {imageUrl: './images/hero/Idle.png', maxFrames: 4, frameDuration: 100, size: {x: 200, y: 200}},
-        run: {imageUrl: './images/hero/Run.png', maxFrames: 8, frameDuration: 60, size: {x: 200, y: 200}},
-        fall: {imageUrl: './images/hero/Fall.png', maxFrames: 2, frameDuration: 100, size: {x: 200, y: 200}},
-        jump: {imageUrl: './images/hero/Jump.png', maxFrames: 2, frameDuration: 100, size: {x: 200, y: 200}},
-        death: {imageUrl: './images/hero/Death.png', maxFrames: 7, frameDuration: 100, size: {x: 200, y: 200}},
-        takeHit: {imageUrl: './images/hero/Take hit.png', maxFrames: 3, frameDuration: 100, size: {x: 200, y: 200}},
-        attack1: {imageUrl: './images/hero/Attack1.png', maxFrames: 4, frameDuration: 100, size: {x: 200, y: 200}},
-    },
-    attackData: [
-        {
-            hitboxes: [
-                {offset: {x: 0, y: -60}, size: {x: 0, y: 0},},
-                {offset: {x: 0, y: -60}, size: {x: 160, y: 120},},
-                {offset: {x: 0, y: -60}, size: {x: 160, y: 120},},
-                {offset: {x: 0, y: -60}, size: {x: 160, y: 120},},
-            ],
-            spriteName: 'attack1',
-            cooldown: 50
-        }
-    ]
-    */
-});
+})
+
 let keysDown = [];
 
 let background = new Sprite({sprites: './images/Background.png', position: {x: canvas.width / 2, y: canvas.height / 2}, targetSize: {x: canvas.width, y: canvas.height}});
@@ -78,6 +83,7 @@ addEventListener('keyup', function(e) {
 });
 
 function handleInputs() {
+    // player 1
     let leftPressed, rightPressed, jumpPressed, attackPressed = false; 
     for (let key of keysDown) {
         switch(key) {
@@ -87,7 +93,6 @@ function handleInputs() {
             case 'd':
                 rightPressed = true;
                 break;
-            case ' ':
             case 'w':
                 jumpPressed = true;
                 break;
@@ -114,17 +119,62 @@ function handleInputs() {
             player.velocity.x = 0;
         }
     }
-
     if (jumpPressed) {
         if (player.grounded && !player.getIsAttacking()) {
             player.velocity.y = -player.jumpSpeed;
             player.grounded = false;
         }
     }
-
     if (attackPressed) {
         if (player.getCanAttack()) {
             player.performAttack();
+        }
+    }
+
+    // player 2
+    let leftPressed2, rightPressed2, jumpPressed2, attackPressed2 = false; 
+    for (let key of keysDown) {
+        switch(key) {
+            case 'j':
+                leftPressed2 = true;
+                break;
+            case 'l':
+                rightPressed2 = true;
+                break;
+            case 'i':
+                jumpPressed2 = true;
+                break;
+            case 'o':
+                attackPressed2 = true;
+            default:
+                console.log('default');
+                break;
+        }
+    }
+    if (leftPressed2) {
+        if (!player2.getIsAttacking()) {
+            player2.velocity.x = -player2.speed;
+            player2.facingRight = false;
+        }
+    } else if (rightPressed2) {
+        if (!player2.getIsAttacking()) {
+            player2.velocity.x = player2.speed;
+            player2.facingRight = true;
+        }
+    } else {
+        if (player2.grounded) {
+            player2.velocity.x = 0;
+        }
+    }
+    if (jumpPressed2) {
+        if (player2.grounded && !player2.getIsAttacking()) {
+            player2.velocity.y = -player2.jumpSpeed;
+            player2.grounded = false;
+        }
+    }
+    if (attackPressed2) {
+        if (player2.getCanAttack()) {
+            player2.performAttack();
         }
     }
 }
@@ -132,11 +182,13 @@ function handleInputs() {
 function gameLoop() {
     handleInputs();
     player.update();
+    player2.update();
 
     ctx.fillStyle = '#eee';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     background.draw();
     player.draw();
+    player2.draw();
     requestAnimationFrame(gameLoop);
 }
 
