@@ -1,13 +1,17 @@
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext('2d');
+let p1HealthBarElement = document.getElementById("playerOneHealthBar");
+let p2HealthBarElement = document.getElementById("playerTwoHealthBar");
+console.log(p2HealthBarElement);
 canvas.width = 1024;
 canvas.height = 576;
 
 const gravity = 2.2;
 
 let player = new Player({
+    maxHealth: 100,
     position: {x: 60, y: 0},
-    hitbox: {size: { x: 30, y: 110 }},
+    hurtbox: {size: { x: 30, y: 110 }},
     targetSize: {x: 200 * 2, y: 200 * 2},
     sprites: {
         idle: {imageUrl: './images/hero/Idle.png', maxFrames: 4, frameDuration: 100, size: {x: 200, y: 200}},
@@ -20,6 +24,7 @@ let player = new Player({
     },
     attackData: [
         {
+            damage: 15,
             hitboxes: [
                 {offset: {x: 0, y: -60}, size: {x: 0, y: 0},},
                 {offset: {x: 0, y: -60}, size: {x: 160, y: 120},},
@@ -33,9 +38,10 @@ let player = new Player({
 });
 
 let player2 = new Player({
+    maxHealth: 50,
     position: {x: canvas.width - 60, y: 0},
     facingRight: false,
-    hitbox: {offset: {x: 0, y: -30}, size: { x: 40, y: 100 }},
+    hurtbox: {offset: {x: 0, y: -30}, size: { x: 40, y: 100 }},
     targetSize: {x: 250 * 2, y: 250 * 2},
     sprites: {
         idle: {imageUrl: './images/wizard/Idle.png', maxFrames: 8, frameDuration: 100, size: {x: 250, y: 250}},
@@ -49,6 +55,7 @@ let player2 = new Player({
     },
     attackData: [
         {
+            damage: 18,
             hitboxes: [
                 {offset: {x:-80, y: -120}, size: {x: 80, y: 90},},
                 {offset: {x:-80, y: -120}, size: {x: 80, y: 90},},
@@ -99,7 +106,6 @@ function handleInputs() {
             case 'q':
                 attackPressed = true;
             default:
-                console.log('default');
                 break;
         }
     }
@@ -128,6 +134,8 @@ function handleInputs() {
     if (attackPressed) {
         if (player.getCanAttack()) {
             player.performAttack();
+            player2.health -= player.attackData[0].damage;
+            p2HealthBarElement.style.width = Math.max(0, (player2.health / player2.maxHealth)) * 100 + "%";
         }
     }
 
@@ -147,7 +155,6 @@ function handleInputs() {
             case 'o':
                 attackPressed2 = true;
             default:
-                console.log('default');
                 break;
         }
     }
@@ -175,6 +182,8 @@ function handleInputs() {
     if (attackPressed2) {
         if (player2.getCanAttack()) {
             player2.performAttack();
+            player.health -= player2.attackData[0].damage;
+            p1HealthBarElement.style.width = Math.max(0, (player.health / player.maxHealth)) * 100 + "%";
         }
     }
 }

@@ -1,14 +1,16 @@
 class Player extends Sprite {
-    constructor({position={x: 0, y: 0}, targetSize, hitbox={offset: {x: 0, y: 0}, size: {x:80, y:150}}, facingRight=true, speed=8, jumpSpeed=40, velocity={x:0, y:0}, sprites, attackData}) {
+    constructor({position={x: 0, y: 0}, targetSize, maxHealth = 100, hurtbox={offset: {x: 0, y: 0}, size: {x:80, y:150}}, facingRight=true, speed=8, jumpSpeed=40, velocity={x:0, y:0}, sprites, attackData}) {
         super({position, targetSize, facingRight, sprites});
+        this.maxHealth = maxHealth;
+        this.health = maxHealth;
         this.position = position;
-        this.hitbox = hitbox;
+        this.hurtbox = hurtbox;
         this.speed = speed;
         this.jumpSpeed = jumpSpeed;
         this.velocity = velocity;
 
-        if (this.hitbox && !this.hitbox.offset) {
-            this.hitbox.offset = {x: 0, y: 0};
+        if (this.hurtbox && !this.hurtbox.offset) {
+            this.hurtbox.offset = {x: 0, y: 0};
         }
 
         this.grounded = false;
@@ -36,7 +38,6 @@ class Player extends Sprite {
 
     getCanAttack(i) {
         if (i == null) i = this.currentAttack;
-        console.log(this.getNextAttackTime(i));
 
         return !this.getIsAttacking() && Date.now() >= this.getNextAttackTime(i);
     }
@@ -77,8 +78,8 @@ class Player extends Sprite {
 
         this.position.x += this.velocity.x;
 
-        if (-this.hitbox.offset.y + this.hitbox.size.y / 2 + this.position.y + this.velocity.y > canvas.height - 70) {
-            this.position.y = canvas.height - 70 - (-this.hitbox.offset.y + this.hitbox.size.y / 2);
+        if (-this.hurtbox.offset.y + this.hurtbox.size.y / 2 + this.position.y + this.velocity.y > canvas.height - 70) {
+            this.position.y = canvas.height - 70 - (-this.hurtbox.offset.y + this.hurtbox.size.y / 2);
             this.grounded = true;
         } else {
             this.position.y += this.velocity.y;
@@ -106,8 +107,8 @@ class Player extends Sprite {
         super.draw();
 
         ctx.strokeStyle = 'red';
-        ctx.strokeRect(this.position.x - (this.hitbox.offset.x + this.hitbox.size.x / 2), this.position.y - (this.hitbox.offset.y + this.hitbox.size.y / 2),
-            this.hitbox.size.x, this.hitbox.size.y);
+        ctx.strokeRect(this.position.x - (this.hurtbox.offset.x + this.hurtbox.size.x / 2), this.position.y - (this.hurtbox.offset.y + this.hurtbox.size.y / 2),
+            this.hurtbox.size.x, this.hurtbox.size.y);
 
         if (this.getIsAttacking()) {
             ctx.save();
