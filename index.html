@@ -2,9 +2,15 @@
     <body>
         <div style="position: relative; display: inline-block">
             <div style="position: absolute; display: flex; width: 100%; align-items: center; margin-top: 10px;">
-                <div style="background-color: green; height: 30px; width: 100%; margin-left: 20px;"></div>
+                <div style="width: 100%; margin-left: 20px; display: flex; flex-direction: row-reverse;">
+                    <div id="playerOneHealthBar" style="background-color: green; height: 30px; width: 100%;"></div>
+                </div>
+                
                 <div style="border: 1px solid; border-color:gray; height: 45px; width: 60px; flex-shrink: 0;"></div>
-                <div style="background-color: green; height: 30px; width: 100%; margin-right: 20px"></div>
+                <div style="width: 100%; margin-right: 20px;">
+                    <div id="playerTwoHealthBar" style="background-color: green; height: 30px; width: 100%;"></div>
+                </div>
+                
             </div>
             <canvas id="canvas"></canvas>
         </div>
