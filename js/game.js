@@ -11,7 +11,7 @@ const gravity = 2.2;
 let player = new Player({
     maxHealth: 100,
     position: {x: 60, y: 0},
-    hurtbox: {size: { x: 30, y: 110 }},
+    hurtbox: {offset: {x: 0, y: 0}, size: { x: 30, y: 110 }},
     targetSize: {x: 200 * 2, y: 200 * 2},
     sprites: {
         idle: {imageUrl: './images/hero/Idle.png', maxFrames: 4, frameDuration: 100, size: {x: 200, y: 200}},
@@ -39,7 +39,7 @@ let player = new Player({
 
 let player2 = new Player({
     maxHealth: 50,
-    position: {x: canvas.width - 60, y: 0},
+    position: {/*x: canvas.width - 60*/ x: 100, y: 0},
     facingRight: false,
     hurtbox: {offset: {x: 0, y: -30}, size: { x: 40, y: 100 }},
     targetSize: {x: 250 * 2, y: 250 * 2},
@@ -89,6 +89,48 @@ addEventListener('keyup', function(e) {
     if (indexFound >= 0) keysDown.splice(indexFound, 1);
 });
 
+// player1 is the attacker, player2 is the attackee
+function playerAttackCollision(p1, p2) {
+    let p1Hitbox = p1.getCurrentAttackHitbox();
+    let p2Hurtbox = p2.hurtbox;
+
+    let rectA = {
+        x: p1.position.x + (p1.facingRight ? p1Hitbox.offset.x : -p1Hitbox.offset.x -p1Hitbox.size.x),
+        y: p1.position.y + p1Hitbox.offset.y,
+        w: p1Hitbox.size.x, h: p1Hitbox.size.y
+    };
+    let rectB = {
+        x: p2.position.x - p2Hurtbox.size.x / 2 + (p2.facingRight ? p2Hurtbox.offset.x : -p2Hurtbox.offset.x),
+        y: p2.position.y + p2Hurtbox.offset.y,
+        w: p2Hurtbox.size.x, h: p2Hurtbox.size.y
+    };
+
+    return rectCollision(rectA, rectB);
+}
+
+function rectCollision(rectA, rectB) {
+    return rectA.x < rectB.x + rectB.w &&
+        rectA.x + rectA.w > rectB.x &&
+        rectA.y < rectB.y + rectB.h &&
+        rectA.h + rectA.y > rectB.y;
+}
+
+function handleCollisions() {
+    if (player == null || player2 == null) return;
+
+    if (player.getIsAttacking() && playerAttackCollision(player, player2)) {
+        console.log("p1 hit p2");
+        player2.health -= player.attackData[0].damage;
+        p2HealthBarElement.style.width = Math.max(0, (player2.health / player2.maxHealth)) * 100 + "%";
+    }
+
+    if (player2.getIsAttacking() && playerAttackCollision(player2, player)) {
+        console.log("p2 hit p1");
+        player.health -= player2.attackData[0].damage;
+        p1HealthBarElement.style.width = Math.max(0, (player.health / player.maxHealth)) * 100 + "%";
+    }
+}
+
 function handleInputs() {
     // player 1
     let leftPressed, rightPressed, jumpPressed, attackPressed = false; 
@@ -134,8 +176,7 @@ function handleInputs() {
     if (attackPressed) {
         if (player.getCanAttack()) {
             player.performAttack();
-            player2.health -= player.attackData[0].damage;
-            p2HealthBarElement.style.width = Math.max(0, (player2.health / player2.maxHealth)) * 100 + "%";
+            
         }
     }
 
@@ -182,22 +223,37 @@ function handleInputs() {
     if (attackPressed2) {
         if (player2.getCanAttack()) {
             player2.performAttack();
-            player.health -= player2.attackData[0].damage;
-            p1HealthBarElement.style.width = Math.max(0, (player.health / player.maxHealth)) * 100 + "%";
         }
+    }
+}
+
+function drawGuides(gridWidth = 50, gridHeight = 50) {
+    ctx.strokeStyle = 'white';
+    for (let i = 0; i <= canvas.width; i += gridWidth) {
+        ctx.beginPath();
+        ctx.moveTo(i, 0);
+        ctx.lineTo(i, canvas.height);
+        ctx.stroke();
+    }
+
+    for (let i = 0; i <= canvas.height; i += gridHeight) {
+        ctx.beginPath();
+        ctx.moveTo(0, i);
+        ctx.lineTo(canvas.width, i);
+        ctx.stroke();
     }
 }
 
 function gameLoop() {
     handleInputs();
+    handleCollisions();
     player.update();
     player2.update();
 
-    ctx.fillStyle = '#eee';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
     background.draw();
     player.draw();
     player2.draw();
+    drawGuides();
     requestAnimationFrame(gameLoop);
 }
 

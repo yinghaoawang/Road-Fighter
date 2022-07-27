@@ -103,6 +103,14 @@ class Player extends Sprite {
 
     }
 
+    getCurrentAttackHitbox() {
+        const spriteName = this.getCurrentAttack().spriteName;
+        const timePerFrame = this.getCurrentAttack().duration / this.sprites[spriteName].maxFrames;
+        // hitbox index determined by which frame attack animation is currently on
+        let i = (Math.floor((Date.now() - this.getLastAttackTime()) / timePerFrame) || 0) % this.sprites[spriteName].maxFrames;
+        return this.getCurrentAttack().hitboxes[i];
+    }
+
     draw() {
         super.draw();
 
@@ -116,12 +124,9 @@ class Player extends Sprite {
             ctx.translate(this.position.x, this.position.y);
             ctx.scale(this.facingRight ? 1 : -1, 1);
 
-            const spriteName = this.getCurrentAttack().spriteName;
-            const timePerFrame = this.getCurrentAttack().duration / this.sprites[spriteName].maxFrames;
-            // hitbox index determined by which frame attack animation is currently on
-            let i = (Math.floor((Date.now() - this.getLastAttackTime()) / timePerFrame) || 0) % this.sprites[spriteName].maxFrames;
-            ctx.strokeRect(this.getCurrentAttack().hitboxes[i].offset.x, this.getCurrentAttack().hitboxes[i].offset.y,
-                this.getCurrentAttack().hitboxes[i].size.x, this.getCurrentAttack().hitboxes[i].size.y);
+            let currentHitbox = this.getCurrentAttackHitbox();
+            ctx.strokeRect(currentHitbox.offset.x, currentHitbox.offset.y,
+                currentHitbox.size.x, currentHitbox.size.y);
             ctx.restore();
         }
     }
