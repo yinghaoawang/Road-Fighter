@@ -2,6 +2,26 @@ let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext('2d');
 let p1HealthBarElement = document.getElementById("playerOneHealthBar");
 let p2HealthBarElement = document.getElementById("playerTwoHealthBar");
+let gridCheckbox = document.getElementById("gridCheckbox");
+let hurtboxCheckbox = document.getElementById("hurtboxCheckbox");
+let hitboxCheckbox = document.getElementById("hitboxCheckbox");
+
+var showGrid = false;
+var showHurtboxes = false;
+var showHitboxes = false;
+
+gridCheckbox.onchange = () => {
+    showGrid = gridCheckbox.checked;
+};
+
+hurtboxCheckbox.onchange = () => {
+    showHurtboxes = hurtboxCheckbox.checked;
+};
+
+hitboxCheckbox.onchange = () => {
+    showHitboxes = hitboxCheckbox.checked;
+};
+
 console.log(p2HealthBarElement);
 canvas.width = 1024;
 canvas.height = 576;
@@ -231,6 +251,8 @@ function handleInputs() {
 }
 
 function drawGuides(gridWidth = 50, gridHeight = 50) {
+    if (!showGrid) return;
+
     ctx.strokeStyle = 'white';
     for (let i = 0; i <= canvas.width; i += gridWidth) {
         ctx.beginPath();
