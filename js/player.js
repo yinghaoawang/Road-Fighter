@@ -36,12 +36,17 @@ class Player extends Sprite {
         this.attackData = attackData;
         this.attacking = false;
         this.lastAttackTime = -999999;
+        this.lastDamagedTime = -999999;
         for (let i = 0; i < this.attackData.length; ++i) {
             let spriteName = this.attackData[i].spriteName;
             this.attackData[i].lastAttackTime = -999999; // use lastAttackTime in player
             this.attackData[i].duration = this.sprites[spriteName].frameDuration * this.sprites[spriteName].maxFrames;
         }
         console.log(this.getCurrentAttack().hitboxes);
+    }
+
+    getRecoverDuration() {
+        return this.sprites['takeHit'].frameDuration * this.sprites['takeHit'].maxFrames;
     }
 
     performAttack(i) {
@@ -52,6 +57,11 @@ class Player extends Sprite {
         this.attacking = true;
         this.getCurrentAttack().lastAttackTime = Date.now();
         this.lastAttackTime = Date.now();
+    }
+
+    getCanRecover() {
+        if (!this.receivingDamage) return true;
+        return Date.now() >= this.getNextRecoverTime();
     }
 
     getCanAttack(i) {
@@ -84,13 +94,27 @@ class Player extends Sprite {
         return this.attackData[this.currentAttack];
     }
 
+    getNextRecoverTime() {
+        return this.lastDamagedTime + this.getRecoverDuration();
+    }
+
     update() {
-        if (this.getIsAttacking()) {
+        if (this.receivingDamage) {
+            if (this.facingRight) {
+                this.velocity.x += .5;
+                if (this.velocity.x > 0) this.velocity.x = 0;
+            } else {
+                this.velocity.x -= .5;
+                if (this.velocity.x < 0) this.velocity.x = 0;
+            }
+            
+        } else if (this.getIsAttacking()) {
             if (this.grounded) this.velocity.x = 0;
             if (Date.now() >= this.getAttackFinished()) {
                 this.attacking = false;
             }
         }
+
 
         this.velocity.y += gravity;
 
@@ -103,10 +127,13 @@ class Player extends Sprite {
             this.position.y += this.velocity.y;
         }
 
-        if (this.getIsReceivingDamage()) {
+        if (this.receivingDamage && this.getCanRecover()) {
+            this.receivingDamage = false;
+        } 
+
+        if (this.receivingDamage) {
             this.switchSprite('takeHit');
-        }
-        else if (this.getIsAttacking()) {
+        } else if (this.getIsAttacking()) {
             this.switchSprite(this.getCurrentAttack().spriteName);
         } else if (!this.grounded) {
             if (this.velocity.y > 0) {
@@ -122,10 +149,6 @@ class Player extends Sprite {
             }
         }
 
-    }
-
-    getIsReceivingDamage() {
-        return this.receivingDamage;
     }
 
     getCurrentAttackHitbox() {
@@ -150,6 +173,12 @@ class Player extends Sprite {
         targetPlayer.health -= this.getCurrentAttack().damage;
         this.getCurrentAttack().unitsHitList.push(targetPlayer);
         targetPlayer.receivingDamage = true;
+        targetPlayer.lastDamagedTime = Date.now();
+        if (targetPlayer.facingRight) {
+            targetPlayer.velocity.x = -10;
+        } else {
+            targetPlayer.velocity.x = 10;
+        }
     }
 
     draw() {
