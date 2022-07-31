@@ -79,7 +79,10 @@ class Sprite {
         this.animateFrames();
         this.drawSprite({flipped: {x: !this.facingRight}});
         
-        ctx.strokeStyle = 'black';
+        if (showHurtboxes) {
+            ctx.strokeStyle = 'black';
         ctx.strokeRect(this.position.x - this.targetSize.x / 2, this.position.y - this.targetSize.y / 2, this.targetSize.x, this.targetSize.y);
+        }
+        
     }
 }

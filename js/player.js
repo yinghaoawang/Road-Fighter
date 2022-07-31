@@ -204,11 +204,13 @@ class Player extends Sprite {
         
         super.draw();
 
-        ctx.strokeStyle = 'red';
-        ctx.strokeRect(this.position.x - (this.hurtbox.offset.x + this.hurtbox.size.x / 2), this.position.y - (this.hurtbox.offset.y + this.hurtbox.size.y / 2),
+        if (showHurtboxes) {
+            ctx.strokeStyle = 'red';
+            ctx.strokeRect(this.position.x - (this.hurtbox.offset.x + this.hurtbox.size.x / 2), this.position.y - (this.hurtbox.offset.y + this.hurtbox.size.y / 2),
             this.hurtbox.size.x, this.hurtbox.size.y);
+        }
 
-        if (this.getIsAttacking()) {
+        if (showHitboxes && this.getIsAttacking()) {
             ctx.save();
             ctx.strokeStyle = 'limegreen';
             ctx.translate(this.position.x, this.position.y);
