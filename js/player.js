@@ -123,6 +123,12 @@ class Player extends Sprite {
         this.velocity.y += gravity;
 
         this.position.x += this.velocity.x;
+        if (this.position.x - this.hurtbox.size.x / 2 < 0) {
+            this.position.x = this.hurtbox.size.x / 2;
+        }
+        if (this.position.x + this.hurtbox.size.x / 2 > canvas.width) {
+            this.position.x = canvas.width - this.hurtbox.size.x / 2;
+        }
 
         if (-this.hurtbox.offset.y + this.hurtbox.size.y / 2 + this.position.y + this.velocity.y > canvas.height - 70) {
             this.position.y = canvas.height - 70 - (-this.hurtbox.offset.y + this.hurtbox.size.y / 2);
