@@ -32,7 +32,7 @@ let player = new Player({
     maxHealth: 100,
     position: {x: 60, y: 0},
     hurtbox: {offset: {x: 0, y: 0}, size: { x: 30, y: 110 }},
-    targetSize: {x: 200 * 2, y: 200 * 2},
+    targetSize: {x: 200 * 1.6, y: 200 * 1.8},
     sprites: {
         idle: {imageUrl: './images/hero/Idle.png', maxFrames: 4, frameDuration: 100, size: {x: 200, y: 200}},
         run: {imageUrl: './images/hero/Run.png', maxFrames: 8, frameDuration: 60, size: {x: 200, y: 200}},
@@ -40,16 +40,16 @@ let player = new Player({
         jump: {imageUrl: './images/hero/Jump.png', maxFrames: 2, frameDuration: 100, size: {x: 200, y: 200}},
         death: {imageUrl: './images/hero/Death.png', maxFrames: 7, frameDuration: 100, size: {x: 200, y: 200}},
         takeHit: {imageUrl: './images/hero/Take hit.png', maxFrames: 3, frameDuration: 100, size: {x: 200, y: 200}},
-        attack1: {imageUrl: './images/hero/Attack1.png', maxFrames: 4, frameDuration: 100, size: {x: 200, y: 200}},
+        attack1: {imageUrl: './images/hero/Attack1.png', maxFrames: 4, frameDuration: 90, size: {x: 200, y: 200}},
     },
     attackData: [
         {
             damage: 15,
             hitboxes: [
                 {offset: {x: 0, y: -60}, size: {x: 0, y: 0},},
-                {offset: {x: 0, y: -60}, size: {x: 160, y: 120},},
-                {offset: {x: 0, y: -60}, size: {x: 160, y: 120},},
-                {offset: {x: 0, y: -60}, size: {x: 160, y: 120},},
+                {offset: {x: 0, y: -60}, size: {x: 0, y: 0},},
+                {offset: {x: 0, y: -60}, size: {x: 140, y: 120},},
+                {offset: {x: 0, y: -60}, size: {x: 0, y: 0},},
             ],
             spriteName: 'attack1',
             cooldown: 50,
@@ -71,7 +71,7 @@ let player2 = new Player({
         death: {imageUrl: './images/wizard/Death.png', maxFrames: 7, frameDuration: 100, size: {x: 250, y: 250}},
         takeHit: {imageUrl: './images/wizard/Take hit.png', maxFrames: 3, frameDuration: 100, size: {x: 250, y: 250}},
         attack1: {imageUrl: './images/wizard/Attack1.png', maxFrames: 8, frameDuration: 100, size: {x: 250, y: 250}},
-        attack2: {imageUrl: './images/wizard/Attack2.png', maxFrames: 8, frameDuration: 100, size: {x: 250, y: 250}},
+        attack2: {imageUrl: './images/wizard/Attack2.png', maxFrames: 8, frameDuration: 80, size: {x: 250, y: 250}},
     },
     attackData: [
         {
