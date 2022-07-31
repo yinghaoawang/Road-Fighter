@@ -124,8 +124,7 @@ function handleCollisions() {
     }
 
     if (player2.getIsAttacking() && playerAttackCollision(player2, player)) {
-        console.log("p2 hit p1");
-        player.health -= player2.attackData[0].damage;
+        player2.damagePlayer(player);
         p1HealthBarElement.style.width = Math.max(0, (player.health / player.maxHealth)) * 100 + "%";
     }
 }
@@ -151,31 +150,33 @@ function handleInputs() {
         }
     }
     
-    if (leftPressed) {
-        if (!player.getIsAttacking()) {
-            player.velocity.x = -player.speed;
-            player.facingRight = false;
+    if (!player.receivingDamage) {
+        if (leftPressed) {
+            if (!player.getIsAttacking()) {
+                player.velocity.x = -player.speed;
+                player.facingRight = false;
+            }
+        } else if (rightPressed) {
+            if (!player.getIsAttacking()) {
+                player.velocity.x = player.speed;
+                player.facingRight = true;
+            }
+        } else {
+            if (player.grounded && !player.receivingDamage) {
+                player.velocity.x = 0;
+            }
         }
-    } else if (rightPressed) {
-        if (!player.getIsAttacking()) {
-            player.velocity.x = player.speed;
-            player.facingRight = true;
+        if (jumpPressed) {
+            if (player.grounded && !player.getIsAttacking()) {
+                player.velocity.y = -player.jumpSpeed;
+                player.grounded = false;
+            }
         }
-    } else {
-        if (player.grounded) {
-            player.velocity.x = 0;
-        }
-    }
-    if (jumpPressed) {
-        if (player.grounded && !player.getIsAttacking()) {
-            player.velocity.y = -player.jumpSpeed;
-            player.grounded = false;
-        }
-    }
-    if (attackPressed) {
-        if (player.getCanAttack()) {
-            player.performAttack();
-            
+        if (attackPressed) {
+            if (player.getCanAttack()) {
+                player.performAttack();
+                
+            }
         }
     }
 
@@ -198,32 +199,35 @@ function handleInputs() {
                 break;
         }
     }
-    if (leftPressed2) {
-        if (!player2.getIsAttacking()) {
-            player2.velocity.x = -player2.speed;
-            player2.facingRight = false;
+    if (!player2.receivingDamage) {
+        if (leftPressed2) {
+            if (!player2.getIsAttacking()) {
+                player2.velocity.x = -player2.speed;
+                player2.facingRight = false;
+            }
+        } else if (rightPressed2) {
+            if (!player2.getIsAttacking()) {
+                player2.velocity.x = player2.speed;
+                player2.facingRight = true;
+            }
+        } else {
+            if (player2.grounded && !player2.receivingDamage) {
+                player2.velocity.x = 0;
+            }
         }
-    } else if (rightPressed2) {
-        if (!player2.getIsAttacking()) {
-            player2.velocity.x = player2.speed;
-            player2.facingRight = true;
+        if (jumpPressed2) {
+            if (player2.grounded && !player2.getIsAttacking()) {
+                player2.velocity.y = -player2.jumpSpeed;
+                player2.grounded = false;
+            }
         }
-    } else {
-        if (player2.grounded) {
-            player2.velocity.x = 0;
+        if (attackPressed2) {
+            if (player2.getCanAttack()) {
+                player2.performAttack();
+            }
         }
     }
-    if (jumpPressed2) {
-        if (player2.grounded && !player2.getIsAttacking()) {
-            player2.velocity.y = -player2.jumpSpeed;
-            player2.grounded = false;
-        }
-    }
-    if (attackPressed2) {
-        if (player2.getCanAttack()) {
-            player2.performAttack();
-        }
-    }
+    
 }
 
 function drawGuides(gridWidth = 50, gridHeight = 50) {
