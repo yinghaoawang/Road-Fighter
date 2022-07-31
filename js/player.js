@@ -180,6 +180,7 @@ class Player extends Sprite {
         this.getCurrentAttack().unitsHitList.push(targetPlayer);
         targetPlayer.receivingDamage = true;
         targetPlayer.lastDamagedTime = Date.now();
+        targetPlayer.attacking = false;
         
         if (!targetPlayer.getIsDead()) {
             if (targetPlayer.facingRight) {
