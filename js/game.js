@@ -111,8 +111,8 @@ addEventListener('keyup', function(e) {
 
 // player1 is the attacker, player2 is the attackee
 function playerAttackCollision(p1, p2) {
-    let p1Hitbox = p1.getCurrentAttackHitbox();
-    let p2Hurtbox = p2.hurtbox;
+    let p1Hitbox = p1.combatModule.getCurrentAttackHitbox();
+    let p2Hurtbox = p2.combatModule.hurtbox;
 
     let rectA = {
         x: p1.position.x + (p1.facingRight ? p1Hitbox.offset.x : -p1Hitbox.offset.x -p1Hitbox.size.x),
@@ -138,14 +138,15 @@ function rectCollision(rectA, rectB) {
 function handleCollisions() {
     if (player == null || player2 == null) return;
 
-    if (player.getIsAttacking() && playerAttackCollision(player, player2)) {
-        player.damagePlayer(player2);
-        p2HealthBarElement.style.width = Math.max(0, (player2.health / player2.maxHealth)) * 100 + "%";
+    if (player.combatModule.getIsAttacking() && playerAttackCollision(player, player2)) {
+        player.combatModule.damagePlayer(player2);
+        console.log("ah");
+        p2HealthBarElement.style.width = Math.max(0, (player2.combatModule.health / player2.combatModule.maxHealth)) * 100 + "%";
     }
 
-    if (player2.getIsAttacking() && playerAttackCollision(player2, player)) {
-        player2.damagePlayer(player);
-        p1HealthBarElement.style.width = Math.max(0, (player.health / player.maxHealth)) * 100 + "%";
+    if (player2.combatModule.getIsAttacking() && playerAttackCollision(player2, player)) {
+        player2.combatModule.damagePlayer(player);
+        p1HealthBarElement.style.width = Math.max(0, (player.combatModule.health / player.combatModule.maxHealth)) * 100 + "%";
     }
 }
 
@@ -170,31 +171,31 @@ function handleInputs() {
         }
     }
     
-    if (!player.getIsDead() && !player.receivingDamage) {
+    if (!player.combatModule.getIsDead() && !player.combatModule.getIsReceivingDamage()) {
         if (leftPressed) {
-            if (!player.getIsAttacking()) {
+            if (!player.combatModule.getIsAttacking()) {
                 player.velocity.x = -player.speed;
                 player.facingRight = false;
             }
         } else if (rightPressed) {
-            if (!player.getIsAttacking()) {
+            if (!player.combatModule.getIsAttacking()) {
                 player.velocity.x = player.speed;
                 player.facingRight = true;
             }
         } else {
-            if (player.grounded && !player.receivingDamage) {
+            if (player.grounded && !player.combatModule.getIsReceivingDamage()) {
                 player.velocity.x = 0;
             }
         }
         if (jumpPressed) {
-            if (player.grounded && !player.getIsAttacking()) {
+            if (player.grounded && !player.combatModule.getIsAttacking()) {
                 player.velocity.y = -player.jumpSpeed;
                 player.grounded = false;
             }
         }
         if (attackPressed) {
-            if (player.getCanAttack()) {
-                player.performAttack();
+            if (player.combatModule.getCanAttack()) {
+                player.combatModule.performAttack();
                 
             }
         }
@@ -219,31 +220,31 @@ function handleInputs() {
                 break;
         }
     }
-    if (!player2.getIsDead() && !player2.receivingDamage) {
+    if (!player2.combatModule.getIsDead() && !player2.combatModule.getIsReceivingDamage()) {
         if (leftPressed2) {
-            if (!player2.getIsAttacking()) {
+            if (!player2.combatModule.getIsAttacking()) {
                 player2.velocity.x = -player2.speed;
                 player2.facingRight = false;
             }
         } else if (rightPressed2) {
-            if (!player2.getIsAttacking()) {
+            if (!player2.combatModule.getIsAttacking()) {
                 player2.velocity.x = player2.speed;
                 player2.facingRight = true;
             }
         } else {
-            if (player2.grounded && !player2.receivingDamage) {
+            if (player2.grounded && !player2.combatModule.getIsReceivingDamage()) {
                 player2.velocity.x = 0;
             }
         }
         if (jumpPressed2) {
-            if (player2.grounded && !player2.getIsAttacking()) {
+            if (player2.grounded && !player2.combatModule.getIsAttacking()) {
                 player2.velocity.y = -player2.jumpSpeed;
                 player2.grounded = false;
             }
         }
         if (attackPressed2) {
-            if (player2.getCanAttack()) {
-                player2.performAttack();
+            if (player2.combatModule.getCanAttack()) {
+                player2.combatModule.performAttack();
             }
         }
     }
