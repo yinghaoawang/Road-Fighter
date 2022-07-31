@@ -150,7 +150,7 @@ function handleInputs() {
         }
     }
     
-    if (!player.receivingDamage) {
+    if (!player.getIsDead() && !player.receivingDamage) {
         if (leftPressed) {
             if (!player.getIsAttacking()) {
                 player.velocity.x = -player.speed;
@@ -199,7 +199,7 @@ function handleInputs() {
                 break;
         }
     }
-    if (!player2.receivingDamage) {
+    if (!player2.getIsDead() && !player2.receivingDamage) {
         if (leftPressed2) {
             if (!player2.getIsAttacking()) {
                 player2.velocity.x = -player2.speed;

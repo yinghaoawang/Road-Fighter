@@ -45,6 +45,10 @@ class Player extends Sprite {
         console.log(this.getCurrentAttack().hitboxes);
     }
 
+    getIsDead() {
+        return this.health <= 0;
+    }
+
     getRecoverDuration() {
         return this.sprites['takeHit'].frameDuration * this.sprites['takeHit'].maxFrames;
     }
@@ -131,7 +135,9 @@ class Player extends Sprite {
             this.receivingDamage = false;
         } 
 
-        if (this.receivingDamage) {
+        if (this.getIsDead()) {
+            this.switchSprite('death');
+        } else if (this.receivingDamage) {
             this.switchSprite('takeHit');
         } else if (this.getIsAttacking()) {
             this.switchSprite(this.getCurrentAttack().spriteName);
@@ -174,14 +180,24 @@ class Player extends Sprite {
         this.getCurrentAttack().unitsHitList.push(targetPlayer);
         targetPlayer.receivingDamage = true;
         targetPlayer.lastDamagedTime = Date.now();
-        if (targetPlayer.facingRight) {
-            targetPlayer.velocity.x = -10;
-        } else {
-            targetPlayer.velocity.x = 10;
+        
+        if (!targetPlayer.getIsDead()) {
+            if (targetPlayer.facingRight) {
+                targetPlayer.velocity.x = -10;
+            } else {
+                targetPlayer.velocity.x = 10;
+            }
         }
+        
     }
 
     draw() {
+        if (this.getIsDead()) {
+            if (this.currentFrame == this.sprites['death'].maxFrames - 1) {
+                this.animatingFrames = false
+            }
+        }
+        
         super.draw();
 
         ctx.strokeStyle = 'red';
