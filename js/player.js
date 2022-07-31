@@ -1,3 +1,20 @@
+/* example params:
+attackData:
+[
+    {
+        damage: 15,
+        hitboxes: [
+            {offset: {x: 0, y: -60}, size: {x: 0, y: 0},},
+            {offset: {x: 0, y: -60}, size: {x: 160, y: 120},},
+            {offset: {x: 0, y: -60}, size: {x: 160, y: 120},},
+            {offset: {x: 0, y: -60}, size: {x: 160, y: 120},},
+        ],
+        spriteName: 'attack1',
+        cooldown: 50,
+    }
+]
+*/
+
 class Player extends Sprite {
     constructor({position={x: 0, y: 0}, targetSize, maxHealth = 100, hurtbox={offset: {x: 0, y: 0}, size: {x:80, y:150}}, facingRight=true, speed=8, jumpSpeed=40, velocity={x:0, y:0}, sprites, attackData}) {
         super({position, targetSize, facingRight, sprites});
@@ -31,8 +48,9 @@ class Player extends Sprite {
         if (i == null) i = this.currentAttack;
 
         console.log('attacking');
+        this.getCurrentAttack().unitsHitList = []
         this.attacking = true;
-        this.attackData[i].lastAttackTime = Date.now();
+        this.getCurrentAttack().lastAttackTime = Date.now();
         this.lastAttackTime = Date.now();
     }
 
@@ -85,7 +103,10 @@ class Player extends Sprite {
             this.position.y += this.velocity.y;
         }
 
-        if (this.getIsAttacking()) {
+        if (this.getIsReceivingDamage()) {
+            this.switchSprite('takeHit');
+        }
+        else if (this.getIsAttacking()) {
             this.switchSprite(this.getCurrentAttack().spriteName);
         } else if (!this.grounded) {
             if (this.velocity.y > 0) {
@@ -103,12 +124,32 @@ class Player extends Sprite {
 
     }
 
+    getIsReceivingDamage() {
+        return this.receivingDamage;
+    }
+
     getCurrentAttackHitbox() {
         const spriteName = this.getCurrentAttack().spriteName;
         const timePerFrame = this.getCurrentAttack().duration / this.sprites[spriteName].maxFrames;
         // hitbox index determined by which frame attack animation is currently on
         let i = (Math.floor((Date.now() - this.getLastAttackTime()) / timePerFrame) || 0) % this.sprites[spriteName].maxFrames;
         return this.getCurrentAttack().hitboxes[i];
+    }
+
+    canDamagePlayer(targetPlayer) {
+        for (let unitHit of this.getCurrentAttack().unitsHitList) {
+            if (unitHit == targetPlayer) return false;
+        }
+        return true;
+    }
+
+    damagePlayer(targetPlayer) {
+        if (!this.canDamagePlayer(targetPlayer)) {
+            return;
+        }
+        targetPlayer.health -= this.getCurrentAttack().damage;
+        this.getCurrentAttack().unitsHitList.push(targetPlayer);
+        targetPlayer.receivingDamage = true;
     }
 
     draw() {
