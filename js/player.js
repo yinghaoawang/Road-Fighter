@@ -176,6 +176,7 @@ class Player extends Sprite {
         if (!this.canDamagePlayer(targetPlayer)) {
             return;
         }
+
         targetPlayer.health -= this.getCurrentAttack().damage;
         this.getCurrentAttack().unitsHitList.push(targetPlayer);
         targetPlayer.receivingDamage = true;
@@ -183,9 +184,11 @@ class Player extends Sprite {
         targetPlayer.attacking = false;
         
         if (!targetPlayer.getIsDead()) {
-            if (targetPlayer.facingRight) {
+            if (this.position.x > targetPlayer.position.x) {
+                targetPlayer.facingRight = true;
                 targetPlayer.velocity.x = -10;
             } else {
+                targetPlayer.facingRight = false;
                 targetPlayer.velocity.x = 10;
             }
         }
