@@ -1,6 +1,7 @@
 class Sprite {
     constructor({facingRight=true, targetSize, position={x: 0, y: 0}, sprites}) {
         this.sprites = sprites;
+        this.animatingFrames = true;
         if (this.sprites == null || this.sprites.length == 0) {
             this.sprites = {};
             this.sprites.idle = {
@@ -63,10 +64,12 @@ class Sprite {
     }
 
     animateFrames() {
-        if (Date.now() - this.lastFrameDrawn >= this.currentSprite.frameDuration) {
-            this.currentFrame++;
-            if (this.currentFrame >= this.currentSprite.maxFrames) this.currentFrame = 0;
-            this.lastFrameDrawn = Date.now();
+        if (this.animatingFrames) {
+            if (Date.now() - this.lastFrameDrawn >= this.currentSprite.frameDuration) {
+                this.currentFrame++;
+                if (this.currentFrame >= this.currentSprite.maxFrames) this.currentFrame = 0;
+                this.lastFrameDrawn = Date.now();
+            }
         }
     }
 
