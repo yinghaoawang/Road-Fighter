@@ -32,7 +32,7 @@ let player = new Player({
     maxHealth: 100,
     position: {x: 60, y: 0},
     hurtbox: {offset: {x: 0, y: 0}, size: { x: 30, y: 110 }},
-    targetSize: {x: 200 * 1.6, y: 200 * 1.8},
+    targetSize: {x: 200 * 1.65, y: 200 * 2},
     sprites: {
         idle: {imageUrl: './images/hero/Idle.png', maxFrames: 4, frameDuration: 100, size: {x: 200, y: 200}},
         run: {imageUrl: './images/hero/Run.png', maxFrames: 8, frameDuration: 60, size: {x: 200, y: 200}},
@@ -48,7 +48,7 @@ let player = new Player({
             hitboxes: [
                 {offset: {x: 0, y: -60}, size: {x: 0, y: 0},},
                 {offset: {x: 0, y: -60}, size: {x: 0, y: 0},},
-                {offset: {x: 0, y: -60}, size: {x: 140, y: 120},},
+                {offset: {x: 0, y: -65}, size: {x: 136, y: 120},},
                 {offset: {x: 0, y: -60}, size: {x: 0, y: 0},},
             ],
             spriteName: 'attack1',
@@ -58,8 +58,8 @@ let player = new Player({
 });
 
 let player2 = new Player({
-    maxHealth: 50,
-    position: {/*x: canvas.width - 60*/ x: 100, y: 0},
+    maxHealth: 100,
+    position: {x: canvas.width - 60, y: 0},
     facingRight: false,
     hurtbox: {offset: {x: 0, y: -30}, size: { x: 40, y: 100 }},
     targetSize: {x: 250 * 2, y: 250 * 2},
@@ -75,11 +75,11 @@ let player2 = new Player({
     },
     attackData: [
         {
-            damage: 18,
+            damage: 23,
             hitboxes: [
-                {offset: {x:-80, y: -120}, size: {x: 80, y: 90},},
-                {offset: {x:-80, y: -120}, size: {x: 80, y: 90},},
-                {offset: {x:-80, y: -120}, size: {x: 80, y: 90},},
+                {offset: {x:-80, y: -120}, size: {x: 0, y: 0},},
+                {offset: {x:-80, y: -120}, size: {x: 0, y: 0},},
+                {offset: {x:-80, y: -120}, size: {x: 0, y: 0},},
                 {offset: {x: 40, y: -120}, size: {x: 160, y: 140},},
                 {offset: {x: 40, y: -120}, size: {x: 180, y: 200},},
                 {offset: {x: 40, y: -120}, size: {x: 170, y: 220},},
