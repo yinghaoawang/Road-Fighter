@@ -32,7 +32,7 @@ let player = new Player({
                 {offset: {x: 0, y: -60}, size: {x: 160, y: 120},},
             ],
             spriteName: 'attack1',
-            cooldown: 50
+            cooldown: 50,
         }
     ]
 });
@@ -67,7 +67,7 @@ let player2 = new Player({
                 {offset: {x: 0, y: 0}, size: {x: 0, y: 0}},
             ],
             spriteName: 'attack2',
-            cooldown: 50
+            cooldown: 50,
         }
     ]
 })
@@ -119,8 +119,7 @@ function handleCollisions() {
     if (player == null || player2 == null) return;
 
     if (player.getIsAttacking() && playerAttackCollision(player, player2)) {
-        console.log("p1 hit p2");
-        player2.health -= player.attackData[0].damage;
+        player.damagePlayer(player2);
         p2HealthBarElement.style.width = Math.max(0, (player2.health / player2.maxHealth)) * 100 + "%";
     }
 
