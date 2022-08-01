@@ -1,7 +1,17 @@
 <html lang="en">
+    <style>
+        .hidden {
+            display: none !important;
+        }
+        
+    </style>
     <body>
         <div style="position: relative; display: inline-block">
-            <div style="position: absolute; display: flex; width: 100%; align-items: center; margin-top: 10px;">
+            <div id="menuDiv" style="position: absolute; display: flex; width: 100%; align-items: center;">
+                <img id="menuBackground" src="images/MenuBackground.jfif" />
+            </div>
+
+            <div id="playingDiv" style="position: absolute; display: flex; width: 100%; align-items: center; margin-top: 10px;">
                 <div style="width: 100%; margin-left: 20px; display: flex; flex-direction: row-reverse;">
                     <div id="playerOneHealthBar" style="background-color: green; height: 30px; width: 100%;"></div>
                 </div>
@@ -19,9 +29,13 @@
         <div><input id="hitboxCheckbox" type="checkbox" /><label for="hitboxCheckbox"> Show Hitboxes</label></div>
         
         <script src="js/Sprite.js"></script>
+        <script src="js/State.js"></script>
+        <script src="js/StateMachine.js"></script>
         <script src="js/player/PlayerModule.js"></script>
         <script src="js/player/CombatModule.js"></script>
         <script src="js/player/Player.js"></script>
-        <script src="js/game.js"></script>
+        <script src="js/Game.js"></script>
+        <script src="js/utils.js"></script>
+        <script src="js/index.js"></script>
     </body>
 </html>
