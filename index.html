@@ -24,19 +24,22 @@
             </div>
             <canvas id="canvas"></canvas>
         </div>
-        <div><label><input id="gridCheckbox" type="checkbox" /> Show Grid</label></div>
-        <div><input id="hurtboxCheckbox" type="checkbox" /><label for="hurtboxCheckbox"> Show Hurtboxes</label></div>
-        <div><input id="hitboxCheckbox" type="checkbox" /><label for="hitboxCheckbox"> Show Hitboxes</label></div>
+        <div  id="checkboxes">
+            <div><label><input id="gridCheckbox" type="checkbox" /> Show Grid</label></div>
+            <div><input id="hurtboxCheckbox" type="checkbox" /><label for="hurtboxCheckbox"> Show Hurtboxes</label></div>
+            <div><input id="hitboxCheckbox" type="checkbox" /><label for="hitboxCheckbox"> Show Hitboxes</label></div>
+        </div>
         
         <script src="js/Game/Sprite.js"></script>
+        <script src="js/Game/utils.js"></script>
         <script src="js/Game/GameState/State.js"></script>
         <script src="js/Game/GameState/MenuState.js"></script>
+        <script src="js/Game/GameState/PlayingState.js"></script>
         <script src="js/Game/GameState/StateMachine.js"></script>
         <script src="js/Game/Player/PlayerModule.js"></script>
         <script src="js/Game/Player/CombatModule.js"></script>
         <script src="js/Game/Player/Player.js"></script>
         <script src="js/Game/Game.js"></script>
-        <script src="js/Game/utils.js"></script>
         <script src="js/index.js"></script>
     </body>
 </html>

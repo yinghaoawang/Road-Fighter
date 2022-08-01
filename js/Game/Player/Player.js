@@ -1,6 +1,7 @@
 class Player extends Sprite {
-    constructor({position={x: 0, y: 0}, targetSize, maxHealth = 100, hurtbox={offset: {x: 0, y: 0}, size: {x:80, y:150}}, facingRight=true, speed=8, jumpSpeed=40, velocity={x:0, y:0}, sprites, attackData}) {
+    constructor(game, {position={x: 0, y: 0}, targetSize, maxHealth = 100, hurtbox={offset: {x: 0, y: 0}, size: {x:80, y:150}}, facingRight=true, speed=8, jumpSpeed=40, velocity={x:0, y:0}, sprites, attackData}) {
         super({position, targetSize, facingRight, sprites});
+        this.game = game;
         this.combatModule = new CombatModule(this, maxHealth, hurtbox, attackData);
         
         this.position = position;
@@ -12,15 +13,13 @@ class Player extends Sprite {
     }
 
     update() {
-
         this.combatModule.update();
 
-        this.velocity.y += gravity;
+        this.velocity.y += game.gravity;
 
         this.position.x += this.velocity.x;
 
         // bounds
-        
         // horizontal
         let hurtbox = this.combatModule.hurtbox;
         if (this.position.x - hurtbox.size.x / 2 < 0) {

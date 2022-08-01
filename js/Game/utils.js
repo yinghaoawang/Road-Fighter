@@ -42,3 +42,16 @@ function drawGuides(gridWidth = 50, gridHeight = 50) {
         ctx.stroke();
     }
 }
+
+function hideElementRecursive(element) {
+    element.classList.add("hidden");
+    for (let childElement of element.children) {
+        hideElementRecursive(childElement);
+    }
+}
+function showElementRecursive(element) {
+    element.classList.remove("hidden");
+    for (let childElement of element.children) {
+        showElementRecursive(childElement);
+    }
+}
