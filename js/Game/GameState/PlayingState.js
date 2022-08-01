@@ -4,7 +4,8 @@ let p1HealthBarElement = document.getElementById("playerOneHealthBar");
 let p2HealthBarElement = document.getElementById("playerTwoHealthBar");
 hideElementRecursive(playingDiv);
 
-let showGrid = true, showHurtboxes = true, showHitboxes = true;
+let showAll = false;
+let showGrid = showAll, showHurtboxes = showAll, showHitboxes = showAll;
 let checkboxesDiv = document.getElementById("checkboxes");
 hideElementRecursive(checkboxesDiv);
 
@@ -39,17 +40,22 @@ class PlayingState extends State {
     update() {
         super.update();
         this.updateInternalState();
-        if (this.internalState == InternalPlayingState.playing) {
+        if (this.internalState != InternalPlayingState.paused) {
             this.handleCollisions();
             this.player.update();
             this.player2.update();
         }
         
     }
+    drawFilters() {
+        ctx.fillStyle = 'rgba(255, 255, 255, .25)'
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
     draw() {
         super.draw();
-        if (this.internalState == InternalPlayingState.playing) {
+        if (this.internalState != InternalPlayingState.paused) {
             this.background.draw();
+            this.drawFilters();
             this.player.draw();
             this.player2.draw();
             drawGuides();
@@ -74,7 +80,7 @@ class PlayingState extends State {
         this.internalState = InternalPlayingState.paused;
         this.pausePressed = true;
         this.lastPausedTime = Date.now();
-        outerContainerDiv.style.filter = "grayscale(.75)";
+        outerContainerDiv.classList.add("paused");
     }
     endPause() {
         this.internalState = InternalPlayingState.playing;
@@ -85,7 +91,7 @@ class PlayingState extends State {
         this.player2.lastFrameDrawn += Date.now() - this.lastPausedTime;
         this.player2.combatModule.lastAttackTime += Date.now() - this.lastPausedTime;
         this.player2.combatModule.lastDamagedTime += Date.now() - this.lastPausedTime;
-        outerContainerDiv.style.filter = "grayscale(0)";
+        outerContainerDiv.classList.remove("paused");
     }
 
     handlePausedInput() {
