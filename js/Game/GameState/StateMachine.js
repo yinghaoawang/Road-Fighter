@@ -1,5 +1,6 @@
 class StateMachine {
-    constructor() {
+    constructor(game) {
+        this.game = game;
         this.currentState = null;
     }
     changeState(newState) {

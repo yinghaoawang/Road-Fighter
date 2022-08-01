@@ -33,10 +33,11 @@ class PlayingState extends State {
     handleInputs() {
         let player = this.game.player;
         let player2 = this.game.player2;
+        let inputManager = this.game.inputManager;
 
         //player 1
         let leftPressed, rightPressed, jumpPressed, attackPressed = false; 
-        for (let key of this.game.keysDown) {
+        for (let key of inputManager.keysDown) {
             switch(key) {
                 case 'a':
                     leftPressed = true;
@@ -86,7 +87,7 @@ class PlayingState extends State {
         
         // player 2
         let leftPressed2, rightPressed2, jumpPressed2, attackPressed2 = false; 
-        for (let key of this.game.keysDown) {
+        for (let key of inputManager.keysDown) {
             switch(key) {
                 case 'j':
                     leftPressed2 = true;
