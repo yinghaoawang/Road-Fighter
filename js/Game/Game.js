@@ -42,31 +42,31 @@ class Game {
             }
         }
         
-        if (!player.combatModule.getIsDead() && !player.combatModule.getIsReceivingDamage()) {
+        if (!this.player.combatModule.getIsDead() && !this.player.combatModule.getIsReceivingDamage()) {
             if (leftPressed) {
-                if (!player.combatModule.getIsAttacking()) {
-                    player.velocity.x = -player.speed;
-                    player.facingRight = false;
+                if (!this.player.combatModule.getIsAttacking()) {
+                    this.player.velocity.x = -this.player.speed;
+                    this.player.facingRight = false;
                 }
             } else if (rightPressed) {
-                if (!player.combatModule.getIsAttacking()) {
-                    player.velocity.x = player.speed;
-                    player.facingRight = true;
+                if (!this.player.combatModule.getIsAttacking()) {
+                    this.player.velocity.x = this.player.speed;
+                    this.player.facingRight = true;
                 }
             } else {
-                if (player.grounded && !player.combatModule.getIsReceivingDamage()) {
-                    player.velocity.x = 0;
+                if (this.player.grounded && !this.player.combatModule.getIsReceivingDamage()) {
+                    this.player.velocity.x = 0;
                 }
             }
             if (jumpPressed) {
-                if (player.grounded && !player.combatModule.getIsAttacking()) {
-                    player.velocity.y = -player.jumpSpeed;
-                    player.grounded = false;
+                if (this.player.grounded && !this.player.combatModule.getIsAttacking()) {
+                    this.player.velocity.y = -this.player.jumpSpeed;
+                    this.player.grounded = false;
                 }
             }
             if (attackPressed) {
-                if (player.combatModule.getCanAttack()) {
-                    player.combatModule.performAttack();
+                if (this.player.combatModule.getCanAttack()) {
+                    this.player.combatModule.performAttack();
                     
                 }
             }
@@ -91,31 +91,31 @@ class Game {
                     break;
             }
         }
-        if (!player2.combatModule.getIsDead() && !player2.combatModule.getIsReceivingDamage()) {
+        if (!this.player2.combatModule.getIsDead() && !this.player2.combatModule.getIsReceivingDamage()) {
             if (leftPressed2) {
-                if (!player2.combatModule.getIsAttacking()) {
-                    player2.velocity.x = -player2.speed;
-                    player2.facingRight = false;
+                if (!this.player2.combatModule.getIsAttacking()) {
+                    this.player2.velocity.x = -this.player2.speed;
+                    this.player2.facingRight = false;
                 }
             } else if (rightPressed2) {
-                if (!player2.combatModule.getIsAttacking()) {
-                    player2.velocity.x = player2.speed;
-                    player2.facingRight = true;
+                if (!this.player2.combatModule.getIsAttacking()) {
+                    this.player2.velocity.x = this.player2.speed;
+                    this.player2.facingRight = true;
                 }
             } else {
-                if (player2.grounded && !player2.combatModule.getIsReceivingDamage()) {
-                    player2.velocity.x = 0;
+                if (this.player2.grounded && !this.player2.combatModule.getIsReceivingDamage()) {
+                    this.player2.velocity.x = 0;
                 }
             }
             if (jumpPressed2) {
-                if (player2.grounded && !player2.combatModule.getIsAttacking()) {
-                    player2.velocity.y = -player2.jumpSpeed;
-                    player2.grounded = false;
+                if (this.player2.grounded && !this.player2.combatModule.getIsAttacking()) {
+                    this.player2.velocity.y = -this.player2.jumpSpeed;
+                    this.player2.grounded = false;
                 }
             }
             if (attackPressed2) {
-                if (player2.combatModule.getCanAttack()) {
-                    player2.combatModule.performAttack();
+                if (this.player2.combatModule.getCanAttack()) {
+                    this.player2.combatModule.performAttack();
                 }
             }
         }
@@ -123,17 +123,17 @@ class Game {
     }
 
     handleCollisions() {
-        if (player == null || player2 == null) return;
+        if (this.player == null || this.player2 == null) return;
     
-        if (player.combatModule.getIsAttacking() && playerAttackCollision(player, player2)) {
-            player.combatModule.damagePlayer(player2);
+        if (this.player.combatModule.getIsAttacking() && playerAttackCollision(this.player, this.player2)) {
+            this.player.combatModule.damagePlayer(this.player2);
             console.log("ah");
-            p2HealthBarElement.style.width = Math.max(0, (player2.combatModule.health / player2.combatModule.maxHealth)) * 100 + "%";
+            p2HealthBarElement.style.width = Math.max(0, (this.player2.combatModule.health / player2.combatModule.maxHealth)) * 100 + "%";
         }
     
-        if (player2.combatModule.getIsAttacking() && playerAttackCollision(player2, player)) {
-            player2.combatModule.damagePlayer(player);
-            p1HealthBarElement.style.width = Math.max(0, (player.combatModule.health / player.combatModule.maxHealth)) * 100 + "%";
+        if (this.player2.combatModule.getIsAttacking() && playerAttackCollision(this.player2, player)) {
+            player2.combatModule.damagePlayer(this.player);
+            p1HealthBarElement.style.width = Math.max(0, (this.player.combatModule.health / this.player.combatModule.maxHealth)) * 100 + "%";
         }
     }
 
