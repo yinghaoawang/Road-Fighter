@@ -15,7 +15,7 @@
         }
 
         .menu-logo {
-            color: yellow;
+            color: #90e0ef;
             font-size: 150px;
             text-shadow: 10px 15px 0 black;
         }
@@ -71,8 +71,9 @@
     <body>
         <div id="outerContainerDiv" style="position: relative; display: inline-block">
             <div id="menuDiv" style="position: absolute; display: flex; width: 100%; height: 100%;">
-                <div style="position: absolute;">
-                    <img style="filter: brightness(30%)" id="menuBackground" src="images/MenuBackground.jpg" />
+                <div style="position: absolute; display: flex; align-items: stretch;">
+                    <div id="menuBackgroundFilter" style="position: absolute; background-color: rgba(0, 0, 0, .3);"></div>
+                    <img id="menuBackground" src="images/MenuBackground.jpg" />
                 </div>
                 <div style="position: absolute; display: flex; flex-wrap: wrap; width: 100%; height: 50%; justify-content: center; margin-top: 60px;">
                     <div class="menu-logo">Road</div>
