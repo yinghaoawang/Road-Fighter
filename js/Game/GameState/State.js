@@ -1,13 +1,7 @@
 class State {
-    update() {
-
-    }
-    
-    enter() {
-
-    }
-
-    exit() {
-
-    }
+    update() {}
+    draw() {}
+    handleInputs() {}
+    enter() {}
+    exit() {}
 }

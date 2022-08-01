@@ -3,30 +3,7 @@ let ctx = canvas.getContext('2d');
 canvas.width = 1024;
 canvas.height = 576;
 
-let menuDiv = document.getElementById("menuDiv");
-let menuBackgroundElement = document.getElementById("menuBackground");
-hideElementRecursive(menuDiv);
-console.log(menuDiv.childElementCount);
-console.log(menuDiv.children)
-
-let playingDiv = document.getElementById("playingDiv");
-let p1HealthBarElement = document.getElementById("playerOneHealthBar");
-let p2HealthBarElement = document.getElementById("playerTwoHealthBar");
-hideElementRecursive(playingDiv);
-
-function hideElementRecursive(element) {
-    element.classList.add("hidden");
-    for (let childElement of element.children) {
-        hideElementRecursive(childElement);
-    }
-}
-function showElementRecursive(element) {
-    element.classList.remove("hidden");
-    for (let childElement of element.children) {
-        showElementRecursive(childElement);
-    }
-}
-
+/*
 let gridCheckbox = document.getElementById("gridCheckbox");
 let hurtboxCheckbox = document.getElementById("hurtboxCheckbox");
 let hitboxCheckbox = document.getElementById("hitboxCheckbox");
@@ -46,16 +23,11 @@ hurtboxCheckbox.onchange = () => {
 hitboxCheckbox.onchange = () => {
     showHitboxes = hitboxCheckbox.checked;
 };
+*/
 
-menuBackgroundElement.width = canvas.width;
-menuBackgroundElement.height = canvas.height;
+let game = new Game();
 
-const gravity = 2.2;
-
-let stateMachine = new StateMachine();
-let menuState = new MenuState();
-
-let player = new Player({
+let ninja = new Player(game, {
     maxHealth: 100,
     position: {x: 60, y: 0},
     hurtbox: {offset: {x: 0, y: 0}, size: { x: 30, y: 110 }},
@@ -84,7 +56,7 @@ let player = new Player({
     ]
 });
 
-let player2 = new Player({
+let wizard = new Player(game, {
     maxHealth: 100,
     position: {x: canvas.width - 60, y: 0},
     facingRight: false,
@@ -119,6 +91,6 @@ let player2 = new Player({
     ]
 });
 
+game.setPlayers(ninja, wizard);
 
-let game = new Game(player, player2);
-game.gameLoop();
+game.start();
