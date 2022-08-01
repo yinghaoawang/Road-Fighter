@@ -1,12 +1,12 @@
 let menuDiv = document.getElementById("menuDiv");
 let menuBackgroundElement = document.getElementById("menuBackground");
 hideElementRecursive(menuDiv);
-menuBackgroundElement.width = canvas.width;
-menuBackgroundElement.height = canvas.height;
 
 class MenuState extends State {
     constructor(game) {
         super();
+        menuBackgroundElement.width = canvas.width;
+        menuBackgroundElement.height = canvas.height;
         this.game = game;
     }
     enter() {

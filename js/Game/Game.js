@@ -1,7 +1,6 @@
 
 class Game {
     constructor() {
-        let that = this;
         this.gravity = 2.2;
         
         this.inputManager = new InputManager(this);
@@ -20,7 +19,7 @@ class Game {
     }
 
     start() {
-        this.stateMachine.changeState(this.playingState);
+        this.stateMachine.changeState(this.menuState);
         requestAnimationFrame(this.gameLoop.bind(this));
     }
 }

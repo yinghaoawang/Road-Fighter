@@ -1,14 +1,52 @@
 <html lang="en">
     <style>
+        @font-face {
+            font-family: Genjiro;
+            src: url(fonts/Genjiro-JRymx.otf);
+        }
+
+        .menu-logo {
+            color: yellow;
+            font-size: 150px;
+            text-shadow: 10px 15px 0 black;
+        }
+        .menu-press-start {
+            color: white;
+            font-size: 35px;
+            text-shadow: 5px 5px 0 black;
+        }
+
         .hidden {
             display: none !important;
         }
-        
+        #playingDiv, #menuDiv > * {
+            font-family: "Genjiro";
+        }
+
+        .blink {
+            animation: blinker 1.5s step-start infinite;
+        }
+        @keyframes blinker {
+            30% {
+                opacity: 0;
+            }
+        }
     </style>
     <body>
         <div style="position: relative; display: inline-block">
-            <div id="menuDiv" style="position: absolute; display: flex; width: 100%; align-items: center;">
-                <img id="menuBackground" src="images/MenuBackground.jfif" />
+            <div id="menuDiv" style="position: absolute; display: flex; width: 100%; height: 100%;">
+                <div style="position: absolute;">
+                    <img style="filter: brightness(30%)" id="menuBackground" src="images/MenuBackground.jpg" />
+                </div>
+                <div style="position: absolute; display: flex; flex-wrap: wrap; width: 100%; height: 50%; justify-content: center; margin-top: 60px;">
+                    <div class="menu-logo">Road</div>
+                    <div style="flex-basis: 100%"></div>
+                    <div class="menu-logo">Fighter</div>
+                    <div style="position: absolute; display: flex; height: 140%; align-items: end;">
+                        <span class="menu-press-start blink">Press Start</span>
+                    </div>
+                </div>
+
             </div>
 
             <div id="playingDiv" style="position: absolute; display: flex; width: 100%; align-items: center; margin-top: 10px;">
