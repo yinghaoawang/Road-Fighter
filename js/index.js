@@ -121,5 +121,4 @@ let player2 = new Player({
 
 
 let game = new Game(player, player2);
-
-requestAnimationFrame(game.gameLoop);
+game.gameLoop();

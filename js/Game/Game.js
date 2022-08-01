@@ -1,27 +1,30 @@
 
 class Game {
-    constructor(player, player2, background) {
+    constructor(player, player2) {
+        let that = this;
+        this.player = player;
+        this.player2 = player2;
         this.keysDown = [];
         this.background = new Sprite({sprites: './images/Background.png', position: {x: canvas.width / 2, y: canvas.height / 2}, targetSize: {x: canvas.width, y: canvas.height}});
     
         addEventListener('keydown', function(e) {
             let keyPressed = e.key.toLowerCase();
-            if (!this.keysDown.includes(keyPressed)) {
-                this.keysDown.push(keyPressed);
+            if (!that.keysDown.includes(keyPressed)) {
+                that.keysDown.push(keyPressed);
             }
         });
         
         addEventListener('keyup', function(e) {
             let keyReleased = e.key.toLowerCase();
-            let indexFound = this.keysDown.indexOf(keyReleased);
-            if (indexFound >= 0) this.keysDown.splice(indexFound, 1);
+            let indexFound = that.keysDown.indexOf(keyReleased);
+            if (indexFound >= 0) that.keysDown.splice(indexFound, 1);
         });
     }
 
     handleInputs() {
         // player 1
         let leftPressed, rightPressed, jumpPressed, attackPressed = false; 
-        for (let key of keysDown) {
+        for (let key of this.keysDown) {
             switch(key) {
                 case 'a':
                     leftPressed = true;
@@ -71,7 +74,7 @@ class Game {
     
         // player 2
         let leftPressed2, rightPressed2, jumpPressed2, attackPressed2 = false; 
-        for (let key of keysDown) {
+        for (let key of this.keysDown) {
             switch(key) {
                 case 'j':
                     leftPressed2 = true;
@@ -135,15 +138,15 @@ class Game {
     }
 
     gameLoop() {
-        handleInputs();
-        handleCollisions();
-        player.update();
-        player2.update();
+        this.handleInputs();
+        this.handleCollisions();
+        this.player.update();
+        this.player2.update();
     
-        background.draw();
-        player.draw();
-        player2.draw();
+        this.background.draw();
+        this.player.draw();
+        this.player2.draw();
         drawGuides();
-        requestAnimationFrame(this.gameLoop);
+        requestAnimationFrame(this.gameLoop.bind(this));
     }
 }
