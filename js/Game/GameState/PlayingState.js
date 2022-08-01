@@ -15,24 +15,26 @@ class PlayingState extends State {
     }
     enter() {
         showElementRecursive(playingDiv);
+        this.player = new Player(this.game, structuredClone(ninjaData));
+        this.player2 = new Player(this.game, structuredClone(wizardData));
     }
     exit() {
         hideElementRecursive(playingDiv);
     }
     update() {
         this.handleCollisions();
-        this.game.player.update();
-        this.game.player2.update();
+        this.player.update();
+        this.player2.update();
     }
     draw() {
         this.background.draw();
-        this.game.player.draw();
-        this.game.player2.draw();
+        this.player.draw();
+        this.player2.draw();
         drawGuides();
     }
     handleInputs() {
-        let player = this.game.player;
-        let player2 = this.game.player2;
+        let player = this.player;
+        let player2 = this.player2;
         let inputManager = this.game.inputManager;
 
         //player 1
@@ -135,8 +137,8 @@ class PlayingState extends State {
     }
 
     handleCollisions() {
-        let player = this.game.player;
-        let player2 = this.game.player2;
+        let player = this.player;
+        let player2 = this.player2;
 
         if (player == null || player2 == null) return;
     
