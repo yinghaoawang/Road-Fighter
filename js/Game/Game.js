@@ -11,11 +11,6 @@ class Game {
         this.playingState = new PlayingState(this);
     }
 
-    setPlayers(player, player2) {
-        this.player = player;
-        this.player2 = player2;
-    }
-
     gameLoop() {
         this.stateMachine.handleInputs();
         this.stateMachine.update();
