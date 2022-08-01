@@ -14,25 +14,30 @@ class PlayingState extends State {
         this.background = new Sprite({sprites: './images/Background.png', position: {x: canvas.width / 2, y: canvas.height / 2}, targetSize: {x: canvas.width, y: canvas.height}});
     }
     enter() {
+        super.enter();
         showElementRecursive(playingDiv);
         this.player = new Player(this.game, structuredClone(ninjaData));
         this.player2 = new Player(this.game, structuredClone(wizardData));
     }
     exit() {
+        super.exit();
         hideElementRecursive(playingDiv);
     }
     update() {
+        super.update();
         this.handleCollisions();
         this.player.update();
         this.player2.update();
     }
     draw() {
+        super.draw();
         this.background.draw();
         this.player.draw();
         this.player2.draw();
         drawGuides();
     }
     handleInputs() {
+        super.handleInputs();
         let player = this.player;
         let player2 = this.player2;
         let inputManager = this.game.inputManager;
