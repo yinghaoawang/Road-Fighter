@@ -1,3 +1,4 @@
+let outerContainerDiv = document.getElementById("outerContainerDiv");
 let playingDiv = document.getElementById("playingDiv");
 let p1HealthBarElement = document.getElementById("playerOneHealthBar");
 let p2HealthBarElement = document.getElementById("playerTwoHealthBar");
@@ -7,11 +8,18 @@ let showGrid = true, showHurtboxes = true, showHitboxes = true;
 let checkboxesDiv = document.getElementById("checkboxes");
 hideElementRecursive(checkboxesDiv);
 
+const InternalPlayingState = {
+    playing: 0,
+    paused: 1,
+    finished: 2,
+}
+
 class PlayingState extends State {
     constructor(game) {
         super();
         this.game = game;
         this.background = new Sprite({sprites: './images/Background.png', position: {x: canvas.width / 2, y: canvas.height / 2}, targetSize: {x: canvas.width, y: canvas.height}});
+        this.internalState = InternalPlayingState.playing;
     }
     enter() {
         super.enter();
@@ -23,27 +31,117 @@ class PlayingState extends State {
         super.exit();
         hideElementRecursive(playingDiv);
     }
+    updateInternalState() {
+        if (this.player.combatModule.getIsDead() || this.player2.combatModule.getIsDead()) {
+            this.internalState = InternalPlayingState.finished;
+        }
+    }
     update() {
         super.update();
-        this.handleCollisions();
-        this.player.update();
-        this.player2.update();
+        this.updateInternalState();
+        if (this.internalState == InternalPlayingState.playing) {
+            this.handleCollisions();
+            this.player.update();
+            this.player2.update();
+        }
+        
     }
     draw() {
         super.draw();
-        this.background.draw();
-        this.player.draw();
-        this.player2.draw();
-        drawGuides();
+        if (this.internalState == InternalPlayingState.playing) {
+            this.background.draw();
+            this.player.draw();
+            this.player2.draw();
+            drawGuides();
+        }
     }
     handleInputs() {
         super.handleInputs();
-        let player = this.player;
-        let player2 = this.player2;
+        switch(this.internalState) {
+            case InternalPlayingState.playing:
+                this.handlePlayingInput();
+                break;
+            case InternalPlayingState.paused:
+                this.handlePausedInput();
+                break;
+            case InternalPlayingState.finished:
+                break;
+            default:
+                console.error("Invalid state: " + this.internalState);
+        }
+    }
+    startPause() {
+        this.internalState = InternalPlayingState.paused;
+        this.pausePressed = true;
+        this.lastPausedTime = Date.now();
+        outerContainerDiv.style.filter = "grayscale(.75)";
+    }
+    endPause() {
+        this.internalState = InternalPlayingState.playing;
+        this.pausePressed = true;
+        this.player.lastFrameDrawn += Date.now() - this.lastPausedTime;
+        this.player.combatModule.lastAttackTime += Date.now() - this.lastPausedTime;
+        this.player.combatModule.lastDamagedTime += Date.now() - this.lastPausedTime
+        this.player2.lastFrameDrawn += Date.now() - this.lastPausedTime;
+        this.player2.combatModule.lastAttackTime += Date.now() - this.lastPausedTime;
+        this.player2.combatModule.lastDamagedTime += Date.now() - this.lastPausedTime;
+        outerContainerDiv.style.filter = "grayscale(0)";
+    }
+
+    handlePausedInput() {
         let inputManager = this.game.inputManager;
 
+        if (this.pausePressed && !inputManager.isKeyDown('1') && !inputManager.isKeyDown('9')) {
+            this.pausePressed = false;
+            return;
+        } else if (this.pausePressed) {
+            return;
+        }
+
+        let unpausePressed;
+        for (let key of inputManager.keysDown) {
+            switch(key) {
+                case '1':
+                case '9':
+                    unpausePressed = true;
+                default:
+                    break;
+            }
+        }
+
+        if (unpausePressed) {
+            this.endPause();
+        }
+    }
+
+    handlePlayingInput() {
+        let inputManager = this.game.inputManager;
+
+        if (this.pausePressed && !inputManager.isKeyDown('1') && !inputManager.isKeyDown('9')) {
+            this.pausePressed = false;
+        }
+
+        let pausePressed;
+        for (let key of inputManager.keysDown) {
+            switch(key) {
+                case '1':
+                case '9':
+                    pausePressed = true;
+                default:
+                    break;
+            }
+        }
+
+        if (!this.pausePressed && pausePressed) {
+            this.startPause();
+            return;
+        }
+
+        let player = this.player;
+        let player2 = this.player2;
+
         //player 1
-        let leftPressed, rightPressed, jumpPressed, attackPressed = false; 
+        let leftPressed, rightPressed, jumpPressed, attackPressed; 
         for (let key of inputManager.keysDown) {
             switch(key) {
                 case 'a':
@@ -62,7 +160,7 @@ class PlayingState extends State {
             }
         }
         
-        if (!player.combatModule.getIsDead() && !player.combatModule.getIsReceivingDamage()) {
+        if (!player.combatModule.getIsReceivingDamage()) {
             if (leftPressed) {
                 if (!player.combatModule.getIsAttacking()) {
                     player.velocity.x = -player.speed;
@@ -93,7 +191,7 @@ class PlayingState extends State {
         }
         
         // player 2
-        let leftPressed2, rightPressed2, jumpPressed2, attackPressed2 = false; 
+        let leftPressed2, rightPressed2, jumpPressed2, attackPressed2; 
         for (let key of inputManager.keysDown) {
             switch(key) {
                 case 'j':
@@ -111,7 +209,7 @@ class PlayingState extends State {
                     break;
             }
         }
-        if (!player2.combatModule.getIsDead() && !player2.combatModule.getIsReceivingDamage()) {
+        if (!player2.combatModule.getIsReceivingDamage()) {
             if (leftPressed2) {
                 if (!player2.combatModule.getIsAttacking()) {
                     player2.velocity.x = -player2.speed;
@@ -149,7 +247,6 @@ class PlayingState extends State {
     
         if (player.combatModule.getIsAttacking() && playerAttackCollision(player, player2)) {
             player.combatModule.damagePlayer(player2);
-            console.log("ah");
             p2HealthBarElement.style.width = Math.max(0, (player2.combatModule.health / player2.combatModule.maxHealth)) * 100 + "%";
         }
     

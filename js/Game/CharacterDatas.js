@@ -24,7 +24,7 @@ const wizardData = {
                 {offset: {x: 40, y: -120}, size: {x: 160, y: 140},},
                 {offset: {x: 40, y: -120}, size: {x: 180, y: 200},},
                 {offset: {x: 40, y: -120}, size: {x: 170, y: 220},},
-                {offset: {x: 40, y: -100}, size: {x: 160, y: 210},},
+                {offset: {x: 40, y: -100}, size: {x: 0, y: 0},},
                 {offset: {x: 0, y: 0}, size: {x: 0, y: 0}},
             ],
             spriteName: 'attack2',

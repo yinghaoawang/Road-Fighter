@@ -53,7 +53,6 @@ class CombatModule extends PlayerModule {
     performAttack(i) {
         if (i == null) i = this.currentAttack;
 
-        console.log('attacking');
         this.getCurrentAttack().unitsHitList = []
         this.attacking = true;
         this.getCurrentAttack().lastAttackTime = Date.now();

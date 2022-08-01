@@ -16,4 +16,10 @@ class InputManager {
             if (indexFound >= 0) that.keysDown.splice(indexFound, 1);
         });
     }
+    isKeyDown(key) {
+        for (let k of this.keysDown) {
+            if (k == key) return true;
+        }
+        return false;
+    }
 }
