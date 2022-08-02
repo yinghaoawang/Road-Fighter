@@ -58,6 +58,20 @@
             border: 3px solid #ccc;
             font-family: "Press Start";
         }
+        #winnerText, #winnerHelperText {
+            font-family: "Press Start";
+            width: 100%;
+            text-align: center;
+            font-size: 28px;
+            display: none;
+        }
+        #winnerHelperText {
+            margin-top: 15px;
+            font-size: 10px;
+        }
+        .finished {
+            display: block !important;
+        }
 
         .blink {
             animation: blinker 1.5s step-start infinite;
@@ -83,21 +97,26 @@
                         <span class="menu-press-start blink">Press Start</span>
                     </div>
                 </div>
-
             </div>
 
-            <div id="playingDiv" style="position: absolute; display: flex; width: 100%; align-items: center; margin-top: 10px;">
-                <div style="width: 100%; margin-left: 20px; display: flex; flex-direction: row-reverse; position: relative; align-items: center;">
-                    <div class="health-bar-bg first"></div>
-                    <div class="health-bar" id="playerOneHealthBar"></div>
+            <div id="playingDiv" style="position: inherit;">
+                <div style="position: absolute; display: flex; width: 100%; align-items: center; margin-top: 10px;">
+                    <div style="width: 100%; margin-left: 20px; display: flex; flex-direction: row-reverse; position: relative; align-items: center;">
+                        <div class="health-bar-bg first"></div>
+                        <div class="health-bar" id="playerOneHealthBar"></div>
+                    </div>
+                    
+                    <div class="timer-box" style="flex-shrink: 0; display: flex; justify-content: center; align-items: center;">
+                        <span id="timer">60</span>
+                    </div>
+                    <div style="width: 100%; margin-right: 20px; position: relative; display: flex; align-items: center;">
+                        <div class="health-bar-bg second"></div>
+                        <div class="health-bar" id="playerTwoHealthBar"></div>
+                    </div>
                 </div>
-                
-                <div class="timer-box" style="flex-shrink: 0; display: flex; justify-content: center; align-items: center;">
-                    <span>60</span>
-                </div>
-                <div style="width: 100%; margin-right: 20px; position: relative; display: flex; align-items: center;">
-                    <div class="health-bar-bg second"></div>
-                    <div class="health-bar" id="playerTwoHealthBar"></div>
+                <div style="position: absolute; width: 100%;">
+                    <span class="" id="winnerText">Player 1 Wins</span>
+                    <span class="" id="winnerHelperText">Press T to replay or B to main menu</span>
                 </div>
             </div>
             <canvas id="canvas"></canvas>

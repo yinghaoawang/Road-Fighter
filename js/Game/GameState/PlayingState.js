@@ -9,6 +9,10 @@ let showGrid = showAll, showHurtboxes = showAll, showHitboxes = showAll;
 let checkboxesDiv = document.getElementById("checkboxes");
 hideElementRecursive(checkboxesDiv);
 
+let timerElement = document.getElementById("timer");
+let winnerTextElement = document.getElementById("winnerText");
+let winnerHelperTextElement = document.getElementById("winnerHelperText");
+
 const InternalPlayingState = {
     playing: 0,
     paused: 1,
@@ -20,32 +24,71 @@ class PlayingState extends State {
         super();
         this.game = game;
         this.background = new Sprite({sprites: './images/Background.png', position: {x: canvas.width / 2, y: canvas.height / 2}, targetSize: {x: canvas.width, y: canvas.height}});
-        this.internalState = InternalPlayingState.playing;
+        winnerTextElement.parentElement.style.marginTop = canvas.height / 2 - 40;
+        this.enterPlayingState();
     }
     enter() {
         super.enter();
         showElementRecursive(playingDiv);
         this.player = new Player(this.game, structuredClone(ninjaData));
         this.player2 = new Player(this.game, structuredClone(wizardData));
+        this.timeRemaining = 1000;
+        this.lastTick = Date.now();
     }
     exit() {
         super.exit();
         hideElementRecursive(playingDiv);
     }
+    enterPlayingState() {
+        this.internalState = InternalPlayingState.playing;
+        winnerTextElement.classList.remove('finished');
+        winnerHelperTextElement.classList.remove('finished');
+    }
+
+    enterFinishedState() {
+        this.internalState = InternalPlayingState.finished;
+
+        if (this.timeRemaining <= 0) {
+            this.player.velocity.x = 0;
+            this.player2.velocity.x = 0;
+        }
+        
+        if (this.player.combatModule.health > this.player2.combatModule.health) {
+            this.finishedText = "Player 1 Wins";
+        } else if (this.player2.combatModule.health > this.player.combatModule.health) {
+            this.finishedText = "Player 2 Wins";
+        } else {
+            this.finishedText = 'Tie';
+        }
+
+        winnerTextElement.textContent = this.finishedText;
+        winnerTextElement.classList.add('finished');
+        winnerHelperTextElement.classList.add('finished');
+    }
+
     updateInternalState() {
         if (this.player.combatModule.getIsDead() || this.player2.combatModule.getIsDead()) {
-            this.internalState = InternalPlayingState.finished;
+            this.enterFinishedState();
+        } else if (this.timeRemaining <= 0) {
+            this.enterFinishedState();
         }
+
+    }
+    updateTimer() {
+        let timeDelta = Date.now() - this.lastTick;
+        this.timeRemaining -= timeDelta;
+        timerElement.textContent = Math.max(Math.ceil(this.timeRemaining / 1000), 0).toFixed(0);
     }
     update() {
         super.update();
         this.updateInternalState();
         if (this.internalState != InternalPlayingState.paused) {
+            this.updateTimer();
             this.handleCollisions();
             this.player.update();
             this.player2.update();
         }
-        
+        this.lastTick = Date.now();
     }
     drawFilters() {
         ctx.fillStyle = 'rgba(255, 255, 255, .25)'
