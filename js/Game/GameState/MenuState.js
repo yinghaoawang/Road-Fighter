@@ -25,7 +25,18 @@ class MenuState extends State {
     handleInputs() {
         super.handleInputs();
         let inputManager = this.game.inputManager;
-        if (inputManager.keysDown.length > 0) {
+        
+        let startPressed;
+        for (let key of inputManager.keysDown) {
+            switch(key) {
+                case 't':
+                    startPressed = true;
+                default:
+                    break;
+            }
+        }
+
+        if (startPressed) {
             this.game.stateMachine.changeState(this.game.playingState);
         }
     }

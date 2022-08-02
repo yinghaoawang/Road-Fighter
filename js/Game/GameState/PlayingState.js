@@ -25,15 +25,21 @@ class PlayingState extends State {
         this.game = game;
         this.background = new Sprite({sprites: './images/Background.png', position: {x: canvas.width / 2, y: canvas.height / 2}, targetSize: {x: canvas.width, y: canvas.height}});
         winnerTextElement.parentElement.style.marginTop = canvas.height / 2 - 40;
+    }
+    resetGame() {
+        this.enterPlayingState();
+        this.player = new Player(this.game, structuredClone(ninjaData));
+        this.player2 = new Player(this.game, structuredClone(wizardData));
+        this.timeRemaining = 3000;
+        this.lastTick = Date.now();
+        this.updateHealthBarElement(p1HealthBarElement, this.player);
+        this.updateHealthBarElement(p2HealthBarElement, this.player2);
         this.enterPlayingState();
     }
     enter() {
         super.enter();
         showElementRecursive(playingDiv);
-        this.player = new Player(this.game, structuredClone(ninjaData));
-        this.player2 = new Player(this.game, structuredClone(wizardData));
-        this.timeRemaining = 1000;
-        this.lastTick = Date.now();
+        this.resetGame();
     }
     exit() {
         super.exit();
@@ -114,6 +120,7 @@ class PlayingState extends State {
                 this.handlePausedInput();
                 break;
             case InternalPlayingState.finished:
+                this.handleFinishedInput();
                 break;
             default:
                 console.error("Invalid state: " + this.internalState);
@@ -135,6 +142,29 @@ class PlayingState extends State {
         this.player2.combatModule.lastAttackTime += Date.now() - this.lastPausedTime;
         this.player2.combatModule.lastDamagedTime += Date.now() - this.lastPausedTime;
         outerContainerDiv.classList.remove("paused");
+    }
+
+    handleFinishedInput() {
+        let inputManager = this.game.inputManager;
+
+        let replayPressed, returnPressed;
+        for (let key of inputManager.keysDown) {
+            switch(key) {
+                case 't':
+                    replayPressed = true;
+                    break;
+                case 'b':
+                    returnPressed = true;
+                default:
+                    break;
+            }
+        }
+
+        if (replayPressed) {
+            this.resetGame();
+        } else if (returnPressed) {
+            this.game.stateMachine.changeState(this.game.menuState);
+        }
     }
 
     handlePausedInput() {
@@ -288,6 +318,10 @@ class PlayingState extends State {
         }
     }
 
+    updateHealthBarElement(healthBarElement, player) {
+        healthBarElement.style.width = Math.max(0, (player.combatModule.health / player.combatModule.maxHealth)) * 100 + "%";
+    }
+
     handleCollisions() {
         let player = this.player;
         let player2 = this.player2;
@@ -296,12 +330,12 @@ class PlayingState extends State {
     
         if (player.combatModule.getIsAttacking() && playerAttackCollision(player, player2)) {
             player.combatModule.damagePlayer(player2);
-            p2HealthBarElement.style.width = Math.max(0, (player2.combatModule.health / player2.combatModule.maxHealth)) * 100 + "%";
+            this.updateHealthBarElement(p2HealthBarElement, player2);
         }
     
         if (player2.combatModule.getIsAttacking() && playerAttackCollision(player2, player)) {
             player2.combatModule.damagePlayer(player);
-            p1HealthBarElement.style.width = Math.max(0, (player.combatModule.health / player.combatModule.maxHealth)) * 100 + "%";
+            this.updateHealthBarElement(p1HealthBarElement, player)
         }
     }
 }
