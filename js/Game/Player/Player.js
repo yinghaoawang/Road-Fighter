@@ -36,7 +36,7 @@ class Player extends Sprite {
             this.position.y += this.velocity.y;
         }
 
-        if (this.combatModule.getIsDead()) {
+        if (this.combatModule.getIsDead() || this.lostMatch) {
             this.switchSprite('death');
         } else if (this.combatModule.getIsReceivingDamage()) {
             this.switchSprite('takeHit');
@@ -60,7 +60,7 @@ class Player extends Sprite {
 
     draw() {
         // stay on dead frame if dead
-        if (this.combatModule.getIsDead()) {
+        if (this.combatModule.getIsDead() || this.lostMatch) {
             if (this.currentFrame == this.sprites['death'].maxFrames - 1) {
                 this.animatingFrames = false
             }

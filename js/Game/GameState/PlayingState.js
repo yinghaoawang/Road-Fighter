@@ -61,8 +61,10 @@ class PlayingState extends State {
         
         if (this.player.combatModule.health > this.player2.combatModule.health) {
             this.finishedText = "Player 1 Wins";
+            this.player2.lostMatch = true;
         } else if (this.player2.combatModule.health > this.player.combatModule.health) {
             this.finishedText = "Player 2 Wins";
+            this.player.lostMatch = true;
         } else {
             this.finishedText = 'Tie';
         }
