@@ -30,7 +30,13 @@ class PlayingState extends State {
         this.enterPlayingState();
         this.player = new Player(this.game, structuredClone(ninjaData));
         this.player2 = new Player(this.game, structuredClone(wizardData));
-        this.timeRemaining = 3000;
+        this.player.position.x = this.player.combatModule.hurtbox.size.x + 20;
+        this.player.position.y = 0;
+        this.player.facingRight = true;
+        this.player2.position.x = canvas.width - this.player2.combatModule.hurtbox.size.x - 20;
+        this.player.position.y = 0;
+        this.player2.facingRight = false;
+        this.timeRemaining = 30000;
         this.lastTick = Date.now();
         this.updateHealthBarElement(p1HealthBarElement, this.player);
         this.updateHealthBarElement(p2HealthBarElement, this.player2);
@@ -222,7 +228,7 @@ class PlayingState extends State {
         let player2 = this.player2;
 
         //player 1
-        let leftPressed, rightPressed, jumpPressed, attackPressed; 
+        let leftPressed, rightPressed, jumpPressed, attackPressed, attack2Pressed; 
         for (let key of inputManager.keysDown) {
             switch(key) {
                 case 'a':
@@ -236,6 +242,8 @@ class PlayingState extends State {
                     break;
                 case 'q':
                     attackPressed = true;
+                case 'e':
+                    attack2Pressed = true;
                 default:
                     break;
             }
@@ -265,14 +273,20 @@ class PlayingState extends State {
             }
             if (attackPressed) {
                 if (player.combatModule.getCanAttack()) {
-                    player.combatModule.performAttack();
+                    player.combatModule.performAttack(0);
+                    
+                }
+            }
+            if (attack2Pressed) {
+                if (player.combatModule.getCanAttack()) {
+                    player.combatModule.performAttack(1);
                     
                 }
             }
         }
         
         // player 2
-        let leftPressed2, rightPressed2, jumpPressed2, attackPressed2; 
+        let leftPressed2, rightPressed2, jumpPressed2, attackPressed2, attack2Pressed2; 
         for (let key of inputManager.keysDown) {
             switch(key) {
                 case 'j':
@@ -286,6 +300,8 @@ class PlayingState extends State {
                     break;
                 case 'o':
                     attackPressed2 = true;
+                case 'u':
+                    attack2Pressed2 = true;
                 default:
                     break;
             }
@@ -314,7 +330,12 @@ class PlayingState extends State {
             }
             if (attackPressed2) {
                 if (player2.combatModule.getCanAttack()) {
-                    player2.combatModule.performAttack();
+                    player2.combatModule.performAttack(0);
+                }
+            }
+            if (attack2Pressed2) {
+                if (player2.combatModule.getCanAttack()) {
+                    player2.combatModule.performAttack(1);
                 }
             }
         }

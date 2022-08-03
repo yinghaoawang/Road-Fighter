@@ -1,6 +1,6 @@
 class Player extends Sprite {
-    constructor(game, {position={x: 0, y: 0}, targetSize, maxHealth = 100, hurtbox={offset: {x: 0, y: 0}, size: {x:80, y:150}}, facingRight=true, speed=8, jumpSpeed=40, velocity={x:0, y:0}, sprites, attackData}) {
-        super({position, targetSize, facingRight, sprites});
+    constructor(game, {spriteOffset={x: 0, y:0}, position={x: 0, y: 0}, targetSize, maxHealth = 100, hurtbox={offset: {x: 0, y: 0}, size: {x:80, y:150}}, facingRight=true, speed=8, jumpSpeed=40, velocity={x:0, y:0}, sprites, attackData}) {
+        super({position, spriteOffset, targetSize, facingRight, sprites});
         this.game = game;
         this.combatModule = new CombatModule(this, maxHealth, hurtbox, attackData);
         
@@ -41,7 +41,7 @@ class Player extends Sprite {
         } else if (this.combatModule.getIsReceivingDamage()) {
             this.switchSprite('takeHit');
         } else if (this.combatModule.getIsAttacking()) {
-            this.switchSprite(this.combatModule.getCurrentAttack().spriteName);
+            this.switchSprite(this.combatModule.getLastAttackData().spriteName);
         } else if (!this.grounded) {
             if (this.velocity.y > 0) {
                 this.switchSprite('fall');

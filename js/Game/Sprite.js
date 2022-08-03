@@ -1,6 +1,7 @@
 class Sprite {
-    constructor({facingRight=true, targetSize, position={x: 0, y: 0}, sprites}) {
+    constructor({facingRight=true, spriteOffset={x: 0, y: 0}, targetSize, position={x: 0, y: 0}, sprites}) {
         this.sprites = sprites;
+        this.spriteOffset = spriteOffset;
         this.animatingFrames = true;
         if (this.sprites == null || this.sprites.length == 0) {
             this.sprites = {};
@@ -58,7 +59,7 @@ class Sprite {
         ctx.translate(this.position.x + (flipped.x ? this.targetSize.x : 0), this.position.y);
         ctx.scale(flipped.x ? -1 : 1, 1);
         ctx.drawImage(this.currentSprite.image,
-            this.currentFrame * this.currentSprite.size.x, 0, this.currentSprite.size.x, this.currentSprite.size.y,
+            this.currentFrame * this.currentSprite.size.x, 0, this.currentSprite.size.x, this.currentSprite.size.y + this.spriteOffset.y,
             (flipped.x ? 1 : -1) * this.targetSize.x / 2, -this.targetSize.y / 2, this.targetSize.x, this.targetSize.y);
         ctx.restore();
     }
@@ -81,7 +82,7 @@ class Sprite {
         
         if (showHurtboxes) {
             ctx.strokeStyle = 'black';
-        ctx.strokeRect(this.position.x - this.targetSize.x / 2, this.position.y - this.targetSize.y / 2, this.targetSize.x, this.targetSize.y);
+            ctx.strokeRect(this.position.x - this.targetSize.x / 2, this.position.y - this.targetSize.y / 2, this.targetSize.x, this.targetSize.y);
         }
         
     }

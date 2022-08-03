@@ -1,6 +1,6 @@
 // player1 is the attacker, player2 is the attackee
 function playerAttackCollision(p1, p2) {
-    let p1Hitbox = p1.combatModule.getCurrentAttackHitbox();
+    let p1Hitbox = p1.combatModule.getActiveAttackHitbox();
     let p2Hurtbox = p2.combatModule.hurtbox;
 
     let rectA = {
@@ -9,10 +9,11 @@ function playerAttackCollision(p1, p2) {
         w: p1Hitbox.size.x, h: p1Hitbox.size.y
     };
     let rectB = {
-        x: p2.position.x - p2Hurtbox.size.x / 2 + (p2.facingRight ? p2Hurtbox.offset.x : -p2Hurtbox.offset.x),
-        y: p2.position.y + p2Hurtbox.offset.y,
+        x: p2.position.x - p2Hurtbox.size.x / 2,
+        y: p2.position.y - p2Hurtbox.size.y / 2 + p2Hurtbox.offset.y,
         w: p2Hurtbox.size.x, h: p2Hurtbox.size.y
     };
+    console.log(rectA, rectB);
 
     return rectCollision(rectA, rectB);
 }
