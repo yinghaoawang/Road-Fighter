@@ -23,7 +23,12 @@ class PlayingState extends State {
     constructor(game) {
         super();
         this.game = game;
-        this.background = new GameObject({sprites: './images/Background.png', position: {x: canvas.width / 2, y: canvas.height / 2}, targetSize: {x: canvas.width, y: canvas.height}});
+        this.background = new GameObject(this.game, "Background");
+        //{sprites: './images/Background.png', position: {x: canvas.width / 2, y: canvas.height / 2}, targetSize: {x: canvas.width, y: canvas.height}}
+        let sr = this.background.addComponent(new SpriteRenderer({path: './images/Background.png'}));
+        this.background.transform.position = {x: canvas.width / 2, y: canvas.height / 2};
+        sr.targetSize = {x: canvas.width, y: canvas.height};
+        
         winnerTextElement.parentElement.style.marginTop = canvas.height / 2 - 40;
     }
     resetGame() {
@@ -102,6 +107,7 @@ class PlayingState extends State {
         if (this.internalState != InternalPlayingState.paused) {
             this.updateTimer();
             this.handleCollisions();
+            for (let e of this.game.entityList) e.update();
             //this.player.update();
             //this.player2.update();
         }
@@ -116,6 +122,7 @@ class PlayingState extends State {
         if (this.internalState != InternalPlayingState.paused) {
             //this.background.draw();
             this.drawFilters();
+            for (let e of this.game.entityList) e.draw();
             //this.player.draw();
             //this.player2.draw();
             drawGuides();

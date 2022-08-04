@@ -2,7 +2,6 @@ class GameObject extends Entity {
     // {facingRight=true, spriteOffset={x: 0, y: 0}, targetSize, position={x: 0, y: 0}, animations}
     constructor(name) {
         super(name);
-        this.addComponent(new SpriteRenderer({path: './images/Zebra.png'}));
         
         /*
         this.animations = animations;

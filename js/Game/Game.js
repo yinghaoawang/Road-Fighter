@@ -2,6 +2,7 @@
 class Game {
     constructor() {
         this.gravity = 2.2;
+        this.entityList = [];
         
         this.inputManager = new InputManager(this);
 
