@@ -1,20 +1,25 @@
-class Sprite {
-    constructor({facingRight=true, spriteOffset={x: 0, y: 0}, targetSize, position={x: 0, y: 0}, sprites}) {
-        this.sprites = sprites;
+class GameObject extends Entity {
+    // {facingRight=true, spriteOffset={x: 0, y: 0}, targetSize, position={x: 0, y: 0}, animations}
+    constructor(name) {
+        super(name);
+        this.addComponent(new SpriteRenderer({path: './images/Zebra.png'}));
+        
+        /*
+        this.animations = animations;
         this.spriteOffset = spriteOffset;
         this.animatingFrames = true;
-        if (this.sprites == null || this.sprites.length == 0) {
-            this.sprites = {};
-            this.sprites.idle = {
+        if (this.animations == null || this.animations.length == 0) {
+            this.animations = {};
+            this.animations.idle = {
                 imageUrl: './images/Zebra.png',
             };
         }
-        if (typeof this.sprites === 'string') {
-            this.sprites = {idle: {imageUrl: this.sprites}};
+        if (typeof this.animations === 'string') {
+            this.animations = {idle: {imageUrl: this.animations}};
         }
 
-        for (const spriteKey in this.sprites) {  
-            let sprite = this.sprites[spriteKey];
+        for (const spriteKey in this.animations) {  
+            let sprite = this.animations[spriteKey];
             sprite.image = new Image();
             sprite.image.src = sprite.imageUrl;
             if (sprite.maxFrames == null) sprite.maxFrames = 1;
@@ -35,20 +40,22 @@ class Sprite {
 
         this.currentFrame = 0;
         this.lastFrameDrawn = Date.now();
-        this.currentSprite = this.sprites.idle;
+        this.currentSprite = this.animations.idle;
+        */
     }
 
+    /*
     switchSprite(spriteKey) {
-        if (this.sprites == null || this.sprites[spriteKey] == null) {
+        if (this.animations == null || this.animations[spriteKey] == null) {
             console.error("Sprite does not have key: " + spriteKey);
             return;
         }
 
-        if (this.sprites[spriteKey]== this.currentSprite) {
+        if (this.animations[spriteKey]== this.currentSprite) {
             return;
         }
 
-        this.currentSprite = this.sprites[spriteKey];
+        this.currentSprite = this.animations[spriteKey];
         this.currentFrame = 0;
     }
 
@@ -86,4 +93,5 @@ class Sprite {
         }
         
     }
+    */
 }

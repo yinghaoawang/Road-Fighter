@@ -66,7 +66,7 @@ const ninjaData = {
     },
     attackData: [
         {
-            damage: 20,
+            damage: 19,
             hitboxes: [
                 {offset: {x: 0, y: -60}, size: {x: 0, y: 0},},
                 {offset: {x: 0, y: -60}, size: {x: 0, y: 0},},
@@ -76,12 +76,12 @@ const ninjaData = {
             spriteName: 'attack1',
             cooldown: 50,
         },
-        {
+        { // anti air
             damage: 17,
             hitboxes: [
                 {offset: {x: 0, y: -60}, size: {x: 0, y: 0},},
                 {offset: {x: 0, y: -60}, size: {x: 0, y: 0},},
-                {offset: {x: 50, y: -110}, size: {x: 115, y: 190},},
+                {offset: {x: 60, y: -110}, size: {x: 113, y: 170},},
                 {offset: {x: 0, y: -60}, size: {x: 0, y: 0},},
             ],
             spriteName: 'attack2',

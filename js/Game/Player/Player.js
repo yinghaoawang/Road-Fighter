@@ -1,4 +1,4 @@
-class Player extends Sprite {
+class Player extends GameObject {
     constructor(game, {spriteOffset={x: 0, y:0}, position={x: 0, y: 0}, targetSize, maxHealth = 100, hurtbox={offset: {x: 0, y: 0}, size: {x:80, y:150}}, facingRight=true, speed=8, jumpSpeed=40, velocity={x:0, y:0}, sprites, attackData}) {
         super({position, spriteOffset, targetSize, facingRight, sprites});
         this.game = game;
@@ -61,7 +61,7 @@ class Player extends Sprite {
     draw() {
         // stay on dead frame if dead
         if (this.combatModule.getIsDead() || this.lostMatch) {
-            if (this.currentFrame == this.sprites['death'].maxFrames - 1) {
+            if (this.currentFrame == this.animations['death'].maxFrames - 1) {
                 this.animatingFrames = false
             }
         }

@@ -4,7 +4,7 @@ let p1HealthBarElement = document.getElementById("playerOneHealthBar");
 let p2HealthBarElement = document.getElementById("playerTwoHealthBar");
 hideElementRecursive(playingDiv);
 
-let showAll = false;
+let showAll = true;
 let showGrid = showAll, showHurtboxes = showAll, showHitboxes = showAll;
 let checkboxesDiv = document.getElementById("checkboxes");
 hideElementRecursive(checkboxesDiv);
@@ -23,11 +23,12 @@ class PlayingState extends State {
     constructor(game) {
         super();
         this.game = game;
-        this.background = new Sprite({sprites: './images/Background.png', position: {x: canvas.width / 2, y: canvas.height / 2}, targetSize: {x: canvas.width, y: canvas.height}});
+        this.background = new GameObject({sprites: './images/Background.png', position: {x: canvas.width / 2, y: canvas.height / 2}, targetSize: {x: canvas.width, y: canvas.height}});
         winnerTextElement.parentElement.style.marginTop = canvas.height / 2 - 40;
     }
     resetGame() {
         this.enterPlayingState();
+        /*
         this.player = new Player(this.game, structuredClone(ninjaData));
         this.player2 = new Player(this.game, structuredClone(wizardData));
         this.player.position.x = this.player.combatModule.hurtbox.size.x + 20;
@@ -40,6 +41,7 @@ class PlayingState extends State {
         this.lastTick = Date.now();
         this.updateHealthBarElement(p1HealthBarElement, this.player);
         this.updateHealthBarElement(p2HealthBarElement, this.player2);
+        */
         this.enterPlayingState();
     }
     enter() {
@@ -81,6 +83,7 @@ class PlayingState extends State {
     }
 
     updateInternalState() {
+        return;
         if (this.player.combatModule.getIsDead() || this.player2.combatModule.getIsDead()) {
             this.enterFinishedState();
         } else if (this.timeRemaining <= 0) {
@@ -99,8 +102,8 @@ class PlayingState extends State {
         if (this.internalState != InternalPlayingState.paused) {
             this.updateTimer();
             this.handleCollisions();
-            this.player.update();
-            this.player2.update();
+            //this.player.update();
+            //this.player2.update();
         }
         this.lastTick = Date.now();
     }
@@ -111,10 +114,10 @@ class PlayingState extends State {
     draw() {
         super.draw();
         if (this.internalState != InternalPlayingState.paused) {
-            this.background.draw();
+            //this.background.draw();
             this.drawFilters();
-            this.player.draw();
-            this.player2.draw();
+            //this.player.draw();
+            //this.player2.draw();
             drawGuides();
         }
     }
@@ -202,6 +205,7 @@ class PlayingState extends State {
     }
 
     handlePlayingInput() {
+        return;
         let inputManager = this.game.inputManager;
 
         if (this.pausePressed && !inputManager.isKeyDown('1') && !inputManager.isKeyDown('9')) {
